@@ -9,6 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { usePortfolioStore } from "@/hooks/use-portfolio-store";
 import type { Project } from "@/types/portfolio";
 import { Plus, Save, Trash2 } from "lucide-react";
+import { usePortfolioData } from "@/hooks/use-portfolio-data";
 
 export function ProjectsEditor() {
   const {
@@ -16,7 +17,7 @@ export function ProjectsEditor() {
     addProject,
     updateProject,
     removeProject,
-  } = usePortfolioStore();
+  } = usePortfolioData();
 
   if (!data) {
     return <div>Loading...</div>;

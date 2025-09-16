@@ -9,7 +9,7 @@
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: "export",
+  // Removed static export to support API routes
   trailingSlash: true,
   eslint: {
     ignoreDuringBuilds: true,

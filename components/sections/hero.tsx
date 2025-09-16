@@ -11,13 +11,21 @@
 
 import { Button } from "@/components/ui/button";
 import { Github, Linkedin, Mail, ArrowDown } from "lucide-react";
-import { usePortfolioData } from "@/hooks/use-portfolio-store";
+import { usePortfolioStore } from "@/hooks/use-portfolio-store";
 import Image from "next/image";
+import { useEffect, useState } from "react";
 
 export function Hero() {
-  const { portfolio: data, isLoading: loading } = usePortfolioData();
+  const { portfolio, isLoading, error } = usePortfolioStore();
+  const [isClient, setIsClient] = useState(false);
 
-  if (loading || !data) {
+  // Set isClient to true after component mounts
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  // Show loading state only on client side and when actually loading
+  if (!isClient || isLoading) {
     return (
       <section
         id="hero"
@@ -37,7 +45,27 @@ export function Hero() {
     );
   }
 
-  const { profile } = data;
+  if (error || !portfolio) {
+    return (
+      <section
+        id="hero"
+        className="min-h-screen flex items-center justify-center pt-16"
+      >
+        <div className="container mx-auto px-4 py-20">
+          <div className="max-w-4xl mx-auto text-center">
+            <h2 className="text-2xl font-bold text-destructive mb-4">
+              Error Loading Portfolio
+            </h2>
+            <p className="text-muted-foreground mb-4">
+              {error || "No portfolio data available"}
+            </p>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  const { profile } = portfolio;
 
   const scrollToAbout = () => {
     const aboutSection = document.getElementById("about");

@@ -1,5 +1,5 @@
 import React from "react";
-import { usePortfolioData } from "@/hooks/use-portfolio-store";
+import { usePortfolioData } from "@/hooks/use-portfolio-data";
 import IconRenderer from "@/components/ui/icon-renderer";
 import type {
   ProjectType,

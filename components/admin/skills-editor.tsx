@@ -7,9 +7,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { usePortfolioStore } from "@/hooks/use-portfolio-store";
 import { Plus, Save, Trash2 } from "lucide-react";
 import type { Skill } from "@/types/portfolio";
+import { usePortfolioData } from "@/hooks/use-portfolio-data";
 
 export function SkillsEditor() {
-  const { portfolio: data, updateSkills } = usePortfolioStore();
+  const { portfolio: data, updateSkills } = usePortfolioData();
 
   if (!data) {
     return <div>Loading...</div>;

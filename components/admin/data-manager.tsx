@@ -22,6 +22,7 @@ import {
   CheckCircle,
 } from "lucide-react";
 import type { EnhancedPortfolio } from "@/types/portfolio";
+import { usePortfolioData } from "@/hooks/use-portfolio-data";
 
 export function DataManager() {
   const {
@@ -29,7 +30,7 @@ export function DataManager() {
     exportJSON,
     importJSON,
     resetToDefault,
-  } = usePortfolioStore();
+  } = usePortfolioData();
   const [isExporting, setIsExporting] = useState(false);
   const [isImporting, setIsImporting] = useState(false);
   const [alert, setAlert] = useState<{

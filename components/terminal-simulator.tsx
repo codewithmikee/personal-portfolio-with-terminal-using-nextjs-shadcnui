@@ -15,7 +15,7 @@ import { useState, useEffect, useRef } from "react";
 // terminalCommands removed - using useTerminalCommands hook instead
 import { useTerminalCommands } from "@/lib/hooks/use-terminal-commands";
 import { useTerminalNavigation } from "@/lib/hooks/use-terminal-navigation";
-import { usePortfolioData } from "@/hooks/use-portfolio-store";
+import { usePortfolioData } from "@/hooks/use-portfolio-data";
 
 interface TerminalLine {
   type: "input" | "output" | "error" | "success" | "warning";
@@ -37,39 +37,39 @@ export function TerminalSimulator() {
   // Construct current directory path
   const currentDirectory = `/home/portfolio/${currentPath.join("/")}`;
 
-  useEffect(() => {
-    // Welcome message
-    setLines([
-      {
-        type: "output",
-        content: `Welcome to ${
-          portfolioData?.profile?.full_name || "Portfolio"
-        } Terminal`,
-        timestamp: new Date(),
-      },
-      {
-        type: "output",
-        content: "Type 'help' to see available commands.",
-        timestamp: new Date(),
-      },
-      {
-        type: "output",
-        content: "",
-      },
-    ]);
+//   useEffect(() => {
+//     // Welcome message
+//     setLines([
+//       {
+//         type: "output",
+//         content: `Welcome to ${
+//           portfolioData?.profile?.full_name || "Portfolio"
+//         } Terminal`,
+//         timestamp: new Date(),
+//       },
+//       {
+//         type: "output",
+//         content: "Type 'help' to see available commands.",
+//         timestamp: new Date(),
+//       },
+//       {
+//         type: "output",
+//         content: "",
+//       },
+//     ]);
 
-    // Focus input on mount
-    if (inputRef.current) {
-      inputRef.current.focus();
-    }
-  }, []);
+//     // Focus input on mount
+//     if (inputRef.current) {
+//       inputRef.current.focus();
+//     }
+//   }, []);
 
-  useEffect(() => {
-    // Auto-scroll to bottom
-    if (terminalRef.current) {
-      terminalRef.current.scrollTop = terminalRef.current.scrollHeight;
-    }
-  }, [lines]);
+//   useEffect(() => {
+//     // Auto-scroll to bottom
+//     if (terminalRef.current) {
+//       terminalRef.current.scrollTop = terminalRef.current.scrollHeight;
+//     }
+//   }, [lines]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

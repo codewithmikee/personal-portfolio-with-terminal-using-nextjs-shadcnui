@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Mail, Github, Linkedin, MapPin } from "lucide-react";
-import { usePortfolioData } from "@/hooks/use-portfolio-store";
+import { usePortfolioData } from "@/hooks/use-portfolio-data";
 
 export function Contact() {
   const { portfolio: data, isLoading: loading } = usePortfolioData();

@@ -17,6 +17,7 @@ import { usePortfolioStore } from "@/hooks/use-portfolio-store";
 import { Plus, Save, Trash2 } from "lucide-react";
 import type { Experience } from "@/types/portfolio";
 import { ProgrammingRole, JobType } from "@/types/portfolio";
+import { usePortfolioData } from "@/hooks/use-portfolio-data";
 
 export function ExperienceEditor() {
   const {
@@ -24,7 +25,7 @@ export function ExperienceEditor() {
     addExperience,
     updateExperience,
     removeExperience,
-  } = usePortfolioStore();
+  } = usePortfolioData();
 
   if (!data) {
     return <div>Loading...</div>;

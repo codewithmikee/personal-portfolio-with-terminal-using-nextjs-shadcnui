@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { usePortfolioStore } from "@/hooks/use-portfolio-store";
 import { SampleCard } from "@/components/admin-components/sample-card";
 import { ImportCard } from "@/components/admin-components/import-card";
@@ -10,6 +10,7 @@ import { ArrowLeft, Edit, Eye, Save } from "lucide-react";
 import { ThemeToggle } from "@/components/admin-components/theme-toggle";
 import { PDFDownload } from "@/components/admin-components/pdf-download";
 import type { EnhancedPortfolio as Portfolio } from "@/types/portfolio";
+import { usePortfolioData } from "@/hooks/use-portfolio-data";
 
 // Sample portfolio data removed - now using database
 
@@ -21,6 +22,9 @@ export default function CVBuilder() {
 
   const {
     portfolio,
+    isLoading,
+    error,
+    loadPortfolio,
     updateProfile,
     updateExperience,
     addExperience,
@@ -33,7 +37,14 @@ export default function CVBuilder() {
     exportJSON,
     importJSON,
     resetToDefault,
-  } = usePortfolioStore();
+  } = usePortfolioData();
+
+  // Load portfolio data on component mount
+  useEffect(() => {
+    if (!portfolio && !isLoading) {
+      loadPortfolio();
+    }
+  }, [portfolio, isLoading, loadPortfolio]);
 
   // Sample portfolios removed - now using database
   const samplePortfolios: Portfolio[] = [];
@@ -82,6 +93,20 @@ export default function CVBuilder() {
             <ThemeToggle />
           </div>
 
+          {error && (
+            <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+              <p className="text-red-600 dark:text-red-400">Error: {error}</p>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={() => loadPortfolio()}
+                className="mt-2"
+              >
+                Retry
+              </Button>
+            </div>
+          )}
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <ImportCard onImport={handleImport} onCreateNew={handleCreateNew} />
 
@@ -99,10 +124,32 @@ export default function CVBuilder() {
   }
 
   if (currentView === "preview") {
-    if (!portfolio) {
+    if (isLoading) {
       return (
         <div className="min-h-screen bg-background flex items-center justify-center">
           <div className="text-muted-foreground">Loading portfolio...</div>
+        </div>
+      );
+    }
+    
+    if (error) {
+      return (
+        <div className="min-h-screen bg-background flex items-center justify-center">
+          <div className="text-center">
+            <p className="text-red-600 dark:text-red-400 mb-4">Error: {error}</p>
+            <Button onClick={() => loadPortfolio()}>Retry</Button>
+          </div>
+        </div>
+      );
+    }
+    
+    if (!portfolio) {
+      return (
+        <div className="min-h-screen bg-background flex items-center justify-center">
+          <div className="text-center">
+            <p className="text-muted-foreground mb-4">No portfolio data found</p>
+            <Button onClick={() => loadPortfolio()}>Load Portfolio</Button>
+          </div>
         </div>
       );
     }
@@ -133,10 +180,32 @@ export default function CVBuilder() {
   }
 
   if (currentView === "edit") {
-    if (!portfolio) {
+    if (isLoading) {
       return (
         <div className="min-h-screen bg-background flex items-center justify-center">
           <div className="text-muted-foreground">Loading portfolio...</div>
+        </div>
+      );
+    }
+    
+    if (error) {
+      return (
+        <div className="min-h-screen bg-background flex items-center justify-center">
+          <div className="text-center">
+            <p className="text-red-600 dark:text-red-400 mb-4">Error: {error}</p>
+            <Button onClick={() => loadPortfolio()}>Retry</Button>
+          </div>
+        </div>
+      );
+    }
+    
+    if (!portfolio) {
+      return (
+        <div className="min-h-screen bg-background flex items-center justify-center">
+          <div className="text-center">
+            <p className="text-muted-foreground mb-4">No portfolio data found</p>
+            <Button onClick={() => loadPortfolio()}>Load Portfolio</Button>
+          </div>
         </div>
       );
     }

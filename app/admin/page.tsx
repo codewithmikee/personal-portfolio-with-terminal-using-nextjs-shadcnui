@@ -9,12 +9,22 @@
 
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { AdminPanel } from "@admin/admin-panel";
+import { usePortfolioData } from "@/hooks/use-portfolio-data";
 
 export default function AdminPage() {
   const [open, setOpen] = useState(true);
+  const { portfolio, isLoading, error, loadPortfolio } = usePortfolioData();
+
+  // Load portfolio data on component mount
+  useEffect(() => {
+    if (!portfolio && !isLoading) {
+      loadPortfolio();
+    }
+  }, [portfolio, isLoading, loadPortfolio]);
+
   return (
     <div className="min-h-screen bg-background p-6">
       <div className="max-w-6xl mx-auto">
@@ -27,6 +37,21 @@ export default function AdminPage() {
             {open ? "Close" : "Open"} Admin
           </Button>
         </div>
+        
+        {error && (
+          <div className="mb-4 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+            <p className="text-red-600 dark:text-red-400">Error: {error}</p>
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={() => loadPortfolio()}
+              className="mt-2"
+            >
+              Retry
+            </Button>
+          </div>
+        )}
+        
         <AdminPanel isOpen={open} onClose={() => setOpen(false)} />
       </div>
     </div>

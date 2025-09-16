@@ -2,7 +2,7 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { usePortfolioData } from "@/hooks/use-portfolio-store";
+import { usePortfolioData } from "@/hooks/use-portfolio-data";
 
 export function Skills() {
   const { portfolio: data, isLoading: loading } = usePortfolioData();

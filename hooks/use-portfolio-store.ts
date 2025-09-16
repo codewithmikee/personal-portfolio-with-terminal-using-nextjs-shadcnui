@@ -1,42 +1,25 @@
-import { usePortfolioStore as useStore } from "@/lib/stores/portfolio.store";
+// hooks/use-portfolio-store.ts
+import { usePortfolioStore as useStore } from "@/lib/stores/portfolio.store"
 
 /**
- * Hook that provides access to the portfolio store
- * Data loading should be handled at the app level
+ * Direct access to store - use sparingly
+ * @deprecated Use usePortfolioData() or usePortfolioContext() instead
  */
 export function usePortfolioStore() {
-  return useStore();
+	return useStore()
 }
 
 /**
- * Hook for components that only need to read portfolio data
- * Doesn't trigger data loading - assumes data is already available
+ * Read-only access to portfolio data
+ * Use this in display components
  */
 export function usePortfolioData() {
-  return useStore((state) => ({
-    portfolio: state.portfolio,
-    isLoading: state.isLoading,
-    error: state.error,
-  }));
+	return useStore(state => ({
+		portfolio: state.portfolio,
+		isLoading: state.isLoading,
+		error: state.error,
+	}))
 }
 
-/**
- * Hook for components that need to modify portfolio data
- * Includes all CRUD operations
- */
-export function usePortfolioActions() {
-  return useStore((state) => ({
-    updateProfile: state.updateProfile,
-    updateExperience: state.updateExperience,
-    addExperience: state.addExperience,
-    removeExperience: state.removeExperience,
-    updateProject: state.updateProject,
-    addProject: state.addProject,
-    removeProject: state.removeProject,
-    updateSkills: state.updateSkills,
-    updateTools: state.updateTools,
-    exportJSON: state.exportJSON,
-    importJSON: state.importJSON,
-    resetToDefault: state.resetToDefault,
-  }));
-}
+// Re-export the enhanced hook
+export { usePortfolioData as usePortfolioDataWithActions } from "./use-portfolio-data"

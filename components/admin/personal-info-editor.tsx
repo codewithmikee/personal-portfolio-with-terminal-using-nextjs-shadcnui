@@ -9,9 +9,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { usePortfolioStore } from "@/hooks/use-portfolio-store";
 import type { Profile } from "@/types/portfolio";
 import { Save } from "lucide-react";
+import { usePortfolioData } from "@/hooks/use-portfolio-data";
 
 export function PersonalInfoEditor() {
-  const { portfolio: data, updateProfile } = usePortfolioStore();
+  const { portfolio: data, updateProfile } = usePortfolioData();
   const [formData, setFormData] = useState<Profile>(
     data?.profile || {
       full_name: "",

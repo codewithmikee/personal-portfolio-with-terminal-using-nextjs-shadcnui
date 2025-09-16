@@ -3,7 +3,7 @@ import {
   getPortfolio,
   updatePortfolio,
   deletePortfolio,
-} from "@/lib/services/portfolio.service";
+} from "@/lib/services/portfolio.api.service";
 
 export async function GET(_: Request, { params }: { params: { id: string } }) {
   const item = await getPortfolio(params.id);
@@ -16,9 +16,17 @@ export async function PATCH(
   request: Request,
   { params }: { params: { id: string } }
 ) {
-  const body = await request.json();
-  const updated = await updatePortfolio(params.id, body);
-  return NextResponse.json(updated);
+  try {
+    const body = await request.json();
+    const updated = await updatePortfolio(params.id, body);
+    return NextResponse.json(updated);
+  } catch (error) {
+    console.error("PATCH error:", error);
+    return NextResponse.json(
+      { error: "Failed to update portfolio" },
+      { status: 500 }
+    );
+  }
 }
 
 export async function DELETE(
