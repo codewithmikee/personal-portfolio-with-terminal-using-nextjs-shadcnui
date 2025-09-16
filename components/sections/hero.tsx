@@ -11,11 +11,11 @@
 
 import { Button } from "@/components/ui/button";
 import { Github, Linkedin, Mail, ArrowDown } from "lucide-react";
-import { useEnhancedPortfolioData } from "@/lib/hooks/use-portfolio-data";
+import { usePortfolioData } from "@/hooks/use-portfolio-store";
 import Image from "next/image";
 
 export function Hero() {
-  const { data, loading } = useEnhancedPortfolioData();
+  const { portfolio: data, isLoading: loading } = usePortfolioData();
 
   if (loading || !data) {
     return (

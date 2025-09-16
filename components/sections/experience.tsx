@@ -2,10 +2,10 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { useEnhancedPortfolioData } from "@/lib/hooks/use-portfolio-data";
+import { usePortfolioData } from "@/hooks/use-portfolio-store";
 
 export function Experience() {
-  const { data, loading } = useEnhancedPortfolioData();
+  const { portfolio: data, isLoading: loading } = usePortfolioData();
 
   if (loading || !data) {
     return (

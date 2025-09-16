@@ -14,7 +14,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Upload, FileText, Plus, Edit } from "lucide-react";
 import { useState } from "react";
-import type { Portfolio } from "@/data/schemas/portfolio";
+import type { Portfolio } from "@/types/portfolio";
 
 interface HomeViewProps {
   onImport: (data: Portfolio) => void;

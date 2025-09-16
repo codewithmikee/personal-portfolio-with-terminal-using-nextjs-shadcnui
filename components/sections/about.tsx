@@ -1,11 +1,12 @@
 "use client";
 
 import { Card, CardContent } from "@/components/ui/card";
-import { useEnhancedPortfolioData } from "@/lib/hooks/use-portfolio-data";
+import { usePortfolioData } from "@/hooks/use-portfolio-store";
+import type { Experience } from "@/types/portfolio";
 import { MapPin } from "lucide-react";
 
 export function About() {
-  const { data, loading } = useEnhancedPortfolioData();
+  const { portfolio: data, isLoading: loading } = usePortfolioData();
 
   if (loading || !data) {
     return (

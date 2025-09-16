@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Plus, X } from "lucide-react";
-import type { Skill, Tool } from "@/data/schemas/portfolio";
+import type { Skill, Tool } from "@/types/portfolio";
 import { useState } from "react";
 
 interface SkillsFormProps {

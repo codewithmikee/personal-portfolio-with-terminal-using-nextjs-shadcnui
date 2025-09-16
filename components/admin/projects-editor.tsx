@@ -6,13 +6,17 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { usePortfolioContext } from "@/lib/hooks/use-portfolio-context";
+import { usePortfolioStore } from "@/hooks/use-portfolio-store";
+import type { Project } from "@/types/portfolio";
 import { Plus, Save, Trash2 } from "lucide-react";
-import type { Project } from "@/data/schemas/portfolio";
 
 export function ProjectsEditor() {
-  const { data, addProject, updateProject, removeProject } =
-    usePortfolioContext();
+  const {
+    portfolio: data,
+    addProject,
+    updateProject,
+    removeProject,
+  } = usePortfolioStore();
 
   if (!data) {
     return <div>Loading...</div>;
@@ -43,7 +47,7 @@ export function ProjectsEditor() {
 
   const handleSave = () => {
     if (isCreating) {
-      addProject(formData);
+      addProject();
     } else if (editingIndex !== null) {
       updateProject(editingIndex, formData);
     }
@@ -135,7 +139,7 @@ export function ProjectsEditor() {
       </div>
 
       <div className="grid gap-4">
-        {data.projects.map((project, index) => (
+        {data.projects.map((project: Project, index: number) => (
           <Card key={`${project.title}-${index}`}>
             <CardContent className="p-4">
               <div className="flex justify-between items-start">

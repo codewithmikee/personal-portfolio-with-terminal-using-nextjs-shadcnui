@@ -9,10 +9,17 @@
 
 "use client";
 
-import { useEnhancedPortfolioData } from "@/lib/hooks/use-portfolio-data";
-import { terminalCommands } from "@/lib/portfolio-data";
+import { usePortfolioData } from "@/hooks/use-portfolio-store";
 import { useNavigationMode } from "@/lib/hooks/use-navigation-mode";
 import { useTerminalNavigation } from "@/lib/hooks/use-terminal-navigation";
+import type {
+  EnhancedPortfolio,
+  Project,
+  Experience,
+  TechStack,
+  Contact,
+  Skill,
+} from "@/types/portfolio";
 
 interface CommandResult {
   type: "output" | "error" | "success" | "warning";
@@ -20,7 +27,16 @@ interface CommandResult {
 }
 
 export function useTerminalCommands() {
-  const { data } = useEnhancedPortfolioData();
+  const { portfolio: data } = usePortfolioData();
+
+  if (!data) {
+    return {
+      executeCommand: () => ({
+        type: "error",
+        output: "Portfolio data not available",
+      }),
+    };
+  }
   const { setMode } = useNavigationMode();
   const { currentPath, currentDirectory, navigateTo, goBack, goHome, setPath } =
     useTerminalNavigation();
@@ -109,12 +125,12 @@ ${data.profile.description}
 Location: ${data.profile.address}
 Email: ${data.profile.email}
 GitHub: ${
-              data.profile.contacts.find((c) => c.name === "GitHub")?.link ||
-              "Not available"
+              data.profile.contacts.find((c: Contact) => c.name === "GitHub")
+                ?.link || "Not available"
             }
 LinkedIn: ${
-              data.profile.contacts.find((c) => c.name === "LinkedIn")?.link ||
-              "Not available"
+              data.profile.contacts.find((c: Contact) => c.name === "LinkedIn")
+                ?.link || "Not available"
             }`,
           };
 
@@ -126,7 +142,7 @@ LinkedIn: ${
             type: "output",
             output: `Projects:\n\n${data.projects
               .map(
-                (project, index) =>
+                (project: Project, index: number) =>
                   `${index + 1}. ${project.title}\n   ${
                     project.description
                   }\n   Link: ${project.link}\n`
@@ -156,11 +172,11 @@ LinkedIn: ${
               project.link
             }\n\nFeatures:\n${project.features
               .map(
-                (feature) =>
+                (feature: any) =>
                   `- ${feature.title}: ${
                     feature.description
                   }\n  Technologies: ${feature.techStacks
-                    .map((tech) => tech.title)
+                    .map((tech: TechStack) => tech.title)
                     .join(", ")}`
               )
               .join("\n")}`,
@@ -174,7 +190,7 @@ LinkedIn: ${
             type: "output",
             output: `Work Experience:\n\n${data.experience
               .map(
-                (exp, index) =>
+                (exp: Experience, index: number) =>
                   `${index + 1}. ${exp.role} at ${exp.company_name}\n   ${
                     exp.company_description
                   }\n   ${exp.job_type} | ${new Date(
@@ -193,13 +209,16 @@ LinkedIn: ${
             return { type: "error", output: "No data available" };
           }
 
-          const skillsByType = data.techStacks.reduce((acc, tech) => {
-            if (!acc[tech.type]) {
-              acc[tech.type] = [];
-            }
-            acc[tech.type].push(tech);
-            return acc;
-          }, {} as Record<string, typeof data.techStacks>);
+          const skillsByType = data.techStacks.reduce(
+            (acc: Record<string, TechStack[]>, tech: TechStack) => {
+              if (!acc[tech.type]) {
+                acc[tech.type] = [];
+              }
+              acc[tech.type].push(tech);
+              return acc;
+            },
+            {} as Record<string, typeof data.techStacks>
+          );
 
           return {
             type: "output",
@@ -207,7 +226,10 @@ LinkedIn: ${
               .map(
                 ([type, skills]) =>
                   `${type}:\n${skills
-                    .map((skill) => `  - ${skill.title} (${skill.level})`)
+                    .map(
+                      (skill: TechStack) =>
+                        `  - ${skill.title} (${skill.level})`
+                    )
                     .join("\n")}`
               )
               .join("\n\n")}`,
@@ -233,7 +255,7 @@ LinkedIn: ${
             }\nLocation: ${
               data.profile.address
             }\n\nSocial Links:\n${data.profile.contacts
-              .map((contact) => `${contact.name}: ${contact.link}`)
+              .map((contact: Contact) => `${contact.name}: ${contact.link}`)
               .join("\n")}`,
           };
 
@@ -276,7 +298,7 @@ LinkedIn: ${
             } positions\nTechnical Skills: ${
               data.techStacks.length
             } technologies\nSkill Categories: ${
-              [...new Set(data.techStacks.map((s) => s.type))].length
+              [...new Set(data.techStacks.map((s: TechStack) => s.type))].length
             } categories`,
           };
 

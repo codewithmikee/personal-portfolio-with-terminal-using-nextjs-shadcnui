@@ -24,6 +24,7 @@ import { ProjectsEditor } from "@admin/projects-editor";
 import { SkillsEditor } from "@admin/skills-editor";
 import { PersonalInfoEditor } from "@admin/personal-info-editor";
 import { DataManager } from "@admin/data-manager";
+import { usePortfolioStore } from "@/hooks/use-portfolio-store";
 
 // Temporary placeholders to keep Admin UI active without pulling in
 // editors that are still being migrated to the enhanced schema.
@@ -45,6 +46,8 @@ interface AdminPanelProps {
 }
 
 export function AdminPanel({ isOpen, onClose }: AdminPanelProps) {
+  const { portfolio, isLoading, error } = usePortfolioStore();
+
   if (!isOpen) return null;
 
   return (
@@ -55,9 +58,12 @@ export function AdminPanel({ isOpen, onClose }: AdminPanelProps) {
             <Settings className="w-6 h-6" />
             Portfolio Content Manager
           </h2>
-          <Button variant="ghost" size="sm" onClick={onClose}>
-            <X className="w-4 h-4" />
-          </Button>
+          <div className="flex items-center gap-4">
+            <div className="text-sm text-muted-foreground">Database Mode</div>
+            <Button variant="ghost" size="sm" onClick={onClose}>
+              <X className="w-4 h-4" />
+            </Button>
+          </div>
         </div>
 
         <div className="p-4 h-[calc(100vh-8rem)] overflow-auto">

@@ -4,12 +4,12 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { usePortfolioContext } from "@/lib/hooks/use-portfolio-context";
+import { usePortfolioStore } from "@/hooks/use-portfolio-store";
 import { Plus, Save, Trash2 } from "lucide-react";
-import type { Skill } from "@/data/schemas/portfolio";
+import type { Skill } from "@/types/portfolio";
 
 export function SkillsEditor() {
-  const { data, updateSkills } = usePortfolioContext();
+  const { portfolio: data, updateSkills } = usePortfolioStore();
 
   if (!data) {
     return <div>Loading...</div>;

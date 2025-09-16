@@ -8,7 +8,7 @@ import { ExperienceForm } from "@/components/admin-components/cv-builder/experie
 import { ProjectsForm } from "@/components/admin-components/cv-builder/projects-form";
 import { SkillsForm } from "@/components/admin-components/cv-builder/skills-form";
 import { CVPreview } from "@/components/admin-components/cv-builder/cv-preview";
-import type { Portfolio, Skill, Tool } from "@/data/schemas/portfolio";
+import type { Portfolio, Skill, Tool } from "@/types/portfolio";
 import { useState } from "react";
 
 interface EditViewProps {

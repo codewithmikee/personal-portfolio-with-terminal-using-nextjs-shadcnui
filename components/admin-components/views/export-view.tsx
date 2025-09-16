@@ -2,7 +2,7 @@
 import { JSONManager } from "@/components/admin-components/cv-builder/json-manager";
 import { PDFDownload } from "@/components/admin-components/pdf-download";
 import { CVPreview } from "@/components/admin-components/cv-builder/cv-preview";
-import type { Portfolio } from "@/data/schemas/portfolio";
+import type { Portfolio } from "@/types/portfolio";
 
 interface ExportViewProps {
   portfolio: Portfolio;

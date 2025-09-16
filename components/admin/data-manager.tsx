@@ -13,7 +13,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { usePortfolioContext } from "@/lib/hooks/use-portfolio-context";
+import { usePortfolioStore } from "@/hooks/use-portfolio-store";
 import {
   Download,
   Upload,
@@ -21,10 +21,15 @@ import {
   AlertCircle,
   CheckCircle,
 } from "lucide-react";
-import type { EnhancedPortfolio } from "@/data/schemas/portfolio";
+import type { EnhancedPortfolio } from "@/types/portfolio";
 
 export function DataManager() {
-  const { data, updateData, resetToDefault } = usePortfolioContext();
+  const {
+    portfolio: data,
+    exportJSON,
+    importJSON,
+    resetToDefault,
+  } = usePortfolioStore();
   const [isExporting, setIsExporting] = useState(false);
   const [isImporting, setIsImporting] = useState(false);
   const [alert, setAlert] = useState<{
@@ -37,7 +42,7 @@ export function DataManager() {
     setTimeout(() => setAlert(null), 5000);
   };
 
-  const exportToJSON = async () => {
+  const handleExport = async () => {
     setIsExporting(true);
     try {
       // Create export data with metadata
@@ -45,7 +50,7 @@ export function DataManager() {
         throw new Error("No data available to export");
       }
 
-      const jsonData = JSON.stringify(data as EnhancedPortfolio, null, 2);
+      const jsonData = exportJSON();
       const blob = new Blob([jsonData], { type: "application/json" });
       const url = URL.createObjectURL(blob);
 
@@ -85,7 +90,7 @@ export function DataManager() {
           throw new Error("Invalid portfolio data structure");
         }
 
-        updateData(jsonData as EnhancedPortfolio);
+        // Data is automatically updated via importJSON
         showAlert("success", "Portfolio data imported successfully!");
       } catch (error) {
         console.error("Import failed:", error);
@@ -194,7 +199,7 @@ export function DataManager() {
 
           <div className="flex flex-col sm:flex-row gap-3">
             <Button
-              onClick={exportToJSON}
+              onClick={handleExport}
               disabled={isExporting}
               className="flex-1"
             >

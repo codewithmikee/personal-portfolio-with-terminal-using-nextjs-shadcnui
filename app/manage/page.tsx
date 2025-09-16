@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { usePortfolio } from "@/hooks/use-portfolio";
+import { usePortfolioStore } from "@/hooks/use-portfolio-store";
 import { SampleCard } from "@/components/admin-components/sample-card";
 import { ImportCard } from "@/components/admin-components/import-card";
 import { CVPreview } from "@/components/admin-components/cv-builder/cv-preview";
@@ -9,9 +9,9 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft, Edit, Eye, Save } from "lucide-react";
 import { ThemeToggle } from "@/components/admin-components/theme-toggle";
 import { PDFDownload } from "@/components/admin-components/pdf-download";
-import type { Portfolio } from "@/data/schemas/portfolio";
+import type { EnhancedPortfolio as Portfolio } from "@/types/portfolio";
 
-import samplePortfolio from "@/data/sample-portfolio.json";
+// Sample portfolio data removed - now using database
 
 type ViewType = "home" | "preview" | "edit";
 
@@ -33,9 +33,10 @@ export default function CVBuilder() {
     exportJSON,
     importJSON,
     resetToDefault,
-  } = usePortfolio();
+  } = usePortfolioStore();
 
-  const samplePortfolios = [samplePortfolio as Portfolio];
+  // Sample portfolios removed - now using database
+  const samplePortfolios: Portfolio[] = [];
 
   const handleSample = (selectedPortfolio: Portfolio) => {
     importJSON(JSON.stringify(selectedPortfolio));
@@ -98,6 +99,13 @@ export default function CVBuilder() {
   }
 
   if (currentView === "preview") {
+    if (!portfolio) {
+      return (
+        <div className="min-h-screen bg-background flex items-center justify-center">
+          <div className="text-muted-foreground">Loading portfolio...</div>
+        </div>
+      );
+    }
     return (
       <div className="min-h-screen bg-background">
         <div className="container mx-auto px-4 py-8">
@@ -125,6 +133,13 @@ export default function CVBuilder() {
   }
 
   if (currentView === "edit") {
+    if (!portfolio) {
+      return (
+        <div className="min-h-screen bg-background flex items-center justify-center">
+          <div className="text-muted-foreground">Loading portfolio...</div>
+        </div>
+      );
+    }
     return (
       <div className="min-h-screen bg-background">
         <div className="container mx-auto px-4 py-8">

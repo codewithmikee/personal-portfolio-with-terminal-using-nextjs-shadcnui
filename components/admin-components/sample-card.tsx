@@ -10,7 +10,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { User, Briefcase, Code } from "lucide-react";
-import type { Portfolio } from "@/data/schemas/portfolio";
+import type { Portfolio } from "@/types/portfolio";
 
 interface SampleCardProps {
   portfolio: Portfolio;

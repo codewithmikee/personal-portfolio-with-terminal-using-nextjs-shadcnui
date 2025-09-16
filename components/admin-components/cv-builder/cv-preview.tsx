@@ -3,7 +3,7 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import type { EnhancedPortfolio } from "@/data/schemas/portfolio";
+import type { EnhancedPortfolio } from "@/types/portfolio";
 import { Mail, Phone, MapPin, ExternalLink, Calendar } from "lucide-react";
 
 interface CVPreviewProps {

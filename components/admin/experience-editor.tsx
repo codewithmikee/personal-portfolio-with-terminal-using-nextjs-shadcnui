@@ -13,14 +13,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { usePortfolioContext } from "@/lib/hooks/use-portfolio-context";
+import { usePortfolioStore } from "@/hooks/use-portfolio-store";
 import { Plus, Save, Trash2 } from "lucide-react";
-import type { Experience } from "@/data/schemas/portfolio";
-import { ProgrammingRole, JobType } from "@/data/schemas/portfolio";
+import type { Experience } from "@/types/portfolio";
+import { ProgrammingRole, JobType } from "@/types/portfolio";
 
 export function ExperienceEditor() {
-  const { data, addExperience, updateExperience, removeExperience } =
-    usePortfolioContext();
+  const {
+    portfolio: data,
+    addExperience,
+    updateExperience,
+    removeExperience,
+  } = usePortfolioStore();
 
   if (!data) {
     return <div>Loading...</div>;
@@ -54,7 +58,7 @@ export function ExperienceEditor() {
 
   const handleSave = () => {
     if (isCreating) {
-      addExperience(formData);
+      addExperience();
     } else if (editingIndex !== null) {
       updateExperience(editingIndex, formData);
     }

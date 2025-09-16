@@ -12,10 +12,10 @@
 import type React from "react";
 
 import { useState, useEffect, useRef } from "react";
-import { terminalCommands } from "@/lib/portfolio-data";
+// terminalCommands removed - using useTerminalCommands hook instead
 import { useTerminalCommands } from "@/lib/hooks/use-terminal-commands";
 import { useTerminalNavigation } from "@/lib/hooks/use-terminal-navigation";
-import { useEnhancedPortfolioData } from "@/lib/hooks/use-portfolio-data";
+import { usePortfolioData } from "@/hooks/use-portfolio-store";
 
 interface TerminalLine {
   type: "input" | "output" | "error" | "success" | "warning";
@@ -32,7 +32,7 @@ export function TerminalSimulator() {
   const terminalRef = useRef<HTMLDivElement>(null);
   const { executeCommand } = useTerminalCommands();
   const { currentPath } = useTerminalNavigation();
-  const { data: portfolioData } = useEnhancedPortfolioData();
+  const { portfolio: portfolioData } = usePortfolioData();
 
   // Construct current directory path
   const currentDirectory = `/home/portfolio/${currentPath.join("/")}`;
@@ -119,7 +119,12 @@ export function TerminalSimulator() {
       setLines((prev) => [
         ...prev,
         {
-          type: result.type,
+          type: result.type as
+            | "input"
+            | "output"
+            | "error"
+            | "success"
+            | "warning",
           content: result.output,
           timestamp: new Date(),
         },
@@ -252,7 +257,7 @@ export function TerminalSimulator() {
               <span className="text-yellow-400 w-24 flex-shrink-0">cat</span>
               <span className="text-gray-400">- View file contents</span>
             </div>
-            {terminalCommands.slice(0, 4).map((cmd) => (
+            {["help", "about", "projects", "contact"].map((cmd) => (
               <div key={cmd} className="flex">
                 <span className="text-yellow-400 w-24 flex-shrink-0">
                   {cmd}

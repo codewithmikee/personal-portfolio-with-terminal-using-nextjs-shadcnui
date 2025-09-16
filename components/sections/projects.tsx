@@ -4,11 +4,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Github, ExternalLink } from "lucide-react";
-import { useEnhancedPortfolioData } from "@/lib/hooks/use-portfolio-data";
+import { usePortfolioData } from "@/hooks/use-portfolio-store";
 import Image from "next/image";
 
 export function Projects() {
-  const { data, loading } = useEnhancedPortfolioData();
+  const { portfolio: data, isLoading: loading } = usePortfolioData();
 
   if (loading || !data) {
     return (

@@ -17,7 +17,7 @@ import {
   type Experience,
   ProgrammingRole,
   JobType,
-} from "@/data/schemas/portfolio";
+} from "@/types/portfolio";
 
 interface ExperienceFormProps {
   experience: Experience[];

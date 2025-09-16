@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { Edit } from "lucide-react";
 import { CVPreview } from "@/components/admin-components/cv-builder/cv-preview";
-import type { Portfolio } from "@/data/schemas/portfolio";
+import type { Portfolio } from "@/types/portfolio";
 
 interface PreviewViewProps {
   portfolio: Portfolio;

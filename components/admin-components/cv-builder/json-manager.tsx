@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Download, Upload, Copy, Check } from "lucide-react";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
-import { Portfolio } from "@/data/schemas/portfolio";
+import { Portfolio } from "@/types/portfolio";
 
 interface JSONManagerProps {
   onExport: () => string;

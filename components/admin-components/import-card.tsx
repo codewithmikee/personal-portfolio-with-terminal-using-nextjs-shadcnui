@@ -14,7 +14,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Upload, FileText, Plus } from "lucide-react";
 import { useState } from "react";
-import { EnhancedPortfolio } from "@/data/schemas/portfolio";
+import { EnhancedPortfolio } from "@/types/portfolio";
 interface ImportCardProps {
   onImport: (portfolio: EnhancedPortfolio) => void;
   onCreateNew: () => void;

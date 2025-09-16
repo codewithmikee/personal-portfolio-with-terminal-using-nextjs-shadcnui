@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Plus, X } from "lucide-react";
-import type { Project } from "@/data/schemas/portfolio";
+import type { Project } from "@/types/portfolio";
 
 interface ProjectsFormProps {
   projects: Project[];

@@ -1,7 +1,12 @@
 import React from "react";
-import { useProjects } from "@/lib/hooks/use-portfolio-data";
+import { usePortfolioData } from "@/hooks/use-portfolio-store";
 import IconRenderer from "@/components/ui/icon-renderer";
-import type { ProjectType } from "@/data/schemas/portfolio";
+import type {
+  ProjectType,
+  Project,
+  Feature,
+  TechStack,
+} from "@/types/portfolio";
 
 interface EnhancedProjectDisplayProps {
   filterByTechStack?: string;
@@ -20,13 +25,36 @@ const EnhancedProjectDisplay: React.FC<EnhancedProjectDisplayProps> = ({
   showFeatures = true,
   className = "",
 }) => {
-  const { projects, filterProjects } = useProjects();
+  const { portfolio, isLoading: loading } = usePortfolioData();
+  const projects = portfolio?.projects || [];
+
+  const filterProjects = (projects: any[], filters: any) => {
+    return projects.filter((project) => {
+      if (filters.techStack) {
+        const hasTechStack = project.features.some((feature: any) =>
+          feature.techStacks.some((tech: any) => tech.key === filters.techStack)
+        );
+        if (!hasTechStack) return false;
+      }
+      if (filters.type && project.type !== filters.type) return false;
+      if (filters.search) {
+        const searchLower = filters.search.toLowerCase();
+        if (
+          !project.title.toLowerCase().includes(searchLower) &&
+          !project.description.toLowerCase().includes(searchLower)
+        ) {
+          return false;
+        }
+      }
+      return true;
+    });
+  };
 
   // Apply filters
   let displayProjects = projects;
 
   if (filterByTechStack || filterByType || searchTerm) {
-    displayProjects = filterProjects({
+    displayProjects = filterProjects(projects, {
       techStack: filterByTechStack,
       type: filterByType,
       search: searchTerm,
@@ -50,7 +78,7 @@ const EnhancedProjectDisplay: React.FC<EnhancedProjectDisplayProps> = ({
     <div
       className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 ${className}`}
     >
-      {displayProjects.map((project, index) => (
+      {displayProjects.map((project: Project, index: number) => (
         <div
           key={`${project.title}-${index}`}
           className="group bg-card hover:bg-card/80 rounded-lg border p-6 transition-all duration-200 hover:shadow-lg"
@@ -85,29 +113,33 @@ const EnhancedProjectDisplay: React.FC<EnhancedProjectDisplayProps> = ({
                 Key Features
               </h4>
               <div className="space-y-3">
-                {project.features.map((feature, featureIndex) => (
-                  <div key={featureIndex} className="space-y-2">
-                    <div className="font-medium text-sm">{feature.title}</div>
-                    <p className="text-xs text-muted-foreground leading-relaxed">
-                      {feature.description}
-                    </p>
+                {project.features.map(
+                  (feature: Feature, featureIndex: number) => (
+                    <div key={featureIndex} className="space-y-2">
+                      <div className="font-medium text-sm">{feature.title}</div>
+                      <p className="text-xs text-muted-foreground leading-relaxed">
+                        {feature.description}
+                      </p>
 
-                    {/* Feature Tech Stacks */}
-                    {feature.techStacks.length > 0 && (
-                      <div className="flex flex-wrap gap-1">
-                        {feature.techStacks.map((tech, techIndex) => (
-                          <span
-                            key={techIndex}
-                            className="inline-flex items-center gap-1 px-2 py-1 bg-muted hover:bg-muted/80 rounded text-xs transition-colors"
-                          >
-                            <IconRenderer name={tech.key} size="xs" />
-                            <span>{tech.title}</span>
-                          </span>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                ))}
+                      {/* Feature Tech Stacks */}
+                      {feature.techStacks.length > 0 && (
+                        <div className="flex flex-wrap gap-1">
+                          {feature.techStacks.map(
+                            (tech: TechStack, techIndex: number) => (
+                              <span
+                                key={techIndex}
+                                className="inline-flex items-center gap-1 px-2 py-1 bg-muted hover:bg-muted/80 rounded text-xs transition-colors"
+                              >
+                                <IconRenderer name={tech.key} size="xs" />
+                                <span>{tech.title}</span>
+                              </span>
+                            )
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  )
+                )}
               </div>
             </div>
           )}
@@ -118,7 +150,8 @@ const EnhancedProjectDisplay: React.FC<EnhancedProjectDisplayProps> = ({
               <span>{project.features.length} features</span>
               <span>
                 {project.features.reduce(
-                  (total, feature) => total + feature.techStacks.length,
+                  (total: number, feature: Feature) =>
+                    total + feature.techStacks.length,
                   0
                 )}{" "}
                 technologies

@@ -5,27 +5,16 @@ const prisma = new PrismaClient();
 async function main() {
   // Reusable Contacts
   const contacts = await Promise.all([
-    prisma.contact
-      .upsert({
-        where: { key: undefined as any }, // placeholder to use create directly
-        update: {},
-        create: {
-          externalId: "contact-linkedin",
-          name: "LinkedIn",
-          icon: "/icons/linkedin.svg",
-          link: "https://linkedin.com/in/mikiyas-birhanu-957b71131",
-        },
-      })
-      .catch(async () =>
-        prisma.contact.create({
-          data: {
-            externalId: "contact-linkedin",
-            name: "LinkedIn",
-            icon: "/icons/linkedin.svg",
-            link: "https://linkedin.com/in/mikiyas-birhanu-957b71131",
-          },
-        })
-      ),
+    prisma.contact.upsert({
+      where: { externalId: "contact-linkedin" },
+      update: {},
+      create: {
+        externalId: "contact-linkedin",
+        name: "LinkedIn",
+        icon: "/icons/linkedin.svg",
+        link: "https://linkedin.com/in/mikiyas-birhanu-957b71131",
+      },
+    }),
     prisma.contact.create({
       data: {
         externalId: "contact-github",

@@ -1,7 +1,11 @@
 import React from "react";
-import { useTechStacks } from "@/lib/hooks/use-portfolio-data";
+import { usePortfolioData } from "@/hooks/use-portfolio-store";
 import IconRenderer from "@/components/ui/icon-renderer";
-import type { ProjectType, ProgrammingLevel } from "@/data/schemas/portfolio";
+import type {
+  ProjectType,
+  ProgrammingLevel,
+  TechStack,
+} from "@/types/portfolio";
 
 interface EnhancedTechStackDisplayProps {
   showMainOnly?: boolean;
@@ -20,13 +24,28 @@ const EnhancedTechStackDisplay: React.FC<EnhancedTechStackDisplayProps> = ({
   maxItems,
   className = "",
 }) => {
-  const {
-    techStacks,
-    mainTechStacks,
-    sideTechStacks,
-    getTechStacksByType,
-    filterTechStacks,
-  } = useTechStacks();
+  const { portfolio, isLoading: loading } = usePortfolioData();
+  const techStacks = portfolio?.techStacks || [];
+
+  const filterTechStacks = (techStacks: any[], filters: any) => {
+    return techStacks.filter((tech) => {
+      if (filters.level && tech.level !== filters.level) return false;
+      if (filters.priority && tech.priority !== filters.priority) return false;
+      if (filters.type && tech.type !== filters.type) return false;
+      if (
+        filters.search &&
+        !tech.title.toLowerCase().includes(filters.search.toLowerCase())
+      )
+        return false;
+      return true;
+    });
+  };
+
+  const mainTechStacks = techStacks.filter((tech) => tech.priority === "main");
+  const sideTechStacks = techStacks.filter((tech) => tech.priority === "side");
+
+  const getTechStacksByType = (techStacks: any[], type: any) =>
+    techStacks.filter((tech) => tech.type === type);
 
   // Determine which tech stacks to display
   let displayTechStacks = techStacks;
@@ -39,11 +58,11 @@ const EnhancedTechStackDisplay: React.FC<EnhancedTechStackDisplayProps> = ({
 
   // Apply filters
   if (filterByType) {
-    displayTechStacks = getTechStacksByType(filterByType);
+    displayTechStacks = getTechStacksByType(techStacks, filterByType);
   }
 
   if (filterByLevel || filterByType) {
-    displayTechStacks = filterTechStacks({
+    displayTechStacks = filterTechStacks(displayTechStacks, {
       level: filterByLevel,
       type: filterByType,
     });
@@ -66,7 +85,7 @@ const EnhancedTechStackDisplay: React.FC<EnhancedTechStackDisplayProps> = ({
     <div
       className={`grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4 ${className}`}
     >
-      {displayTechStacks.map((tech, index) => (
+      {displayTechStacks.map((tech: TechStack, index: number) => (
         <div
           key={`${tech.key}-${index}`}
           className="group bg-card hover:bg-card/80 rounded-lg border p-4 text-center transition-all duration-200 hover:shadow-md"
