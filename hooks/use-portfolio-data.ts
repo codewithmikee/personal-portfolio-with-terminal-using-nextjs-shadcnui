@@ -1,4 +1,10 @@
-// hooks/use-portfolio-data.ts
+/**
+ * @fileoverview Comprehensive portfolio management hooks
+ * @author Mikiyas Birhanu
+ * @email codewithmikee@gmail.com
+ * @github https://github.com/codewithmikee
+ */
+
 import { useCallback, useRef } from "react";
 import { usePortfolioStore } from "@/lib/stores/portfolio.store";
 import { portfolioService } from "@/lib/services/portfolio.service";
@@ -12,11 +18,63 @@ import type {
   EnhancedPortfolio,
 } from "@/types/portfolio";
 
+/**
+ * Main portfolio management hook that provides comprehensive CRUD operations
+ * with optimistic updates, error handling, and user feedback via toast notifications.
+ *
+ * @returns {Object} Portfolio data and management functions
+ * @returns {EnhancedPortfolio | null} portfolio - Current portfolio data
+ * @returns {boolean} isLoading - Loading state
+ * @returns {string | null} error - Current error message
+ * @returns {Function} loadPortfolio - Load portfolio from API
+ * @returns {Function} retry - Retry failed operations
+ * @returns {Function} updateProfile - Update profile information
+ * @returns {Function} addExperience - Add new work experience
+ * @returns {Function} updateExperience - Update existing experience
+ * @returns {Function} removeExperience - Remove experience
+ * @returns {Function} addProject - Add new project
+ * @returns {Function} updateProject - Update existing project
+ * @returns {Function} removeProject - Remove project
+ * @returns {Function} updateSkills - Update skills list
+ * @returns {Function} updateTools - Update tools list
+ * @returns {Function} exportJSON - Export portfolio as JSON
+ * @returns {Function} importJSON - Import portfolio from JSON
+ * @returns {Function} resetToDefault - Reset to default portfolio
+ *
+ * @example
+ * ```tsx
+ * function PortfolioEditor() {
+ *   const {
+ *     portfolio,
+ *     isLoading,
+ *     updateProfile,
+ *     addProject
+ *   } = usePortfolioData();
+ *
+ *   const handleSave = async () => {
+ *     await updateProfile({ full_name: "New Name" });
+ *   };
+ *
+ *   return (
+ *     <div>
+ *       {isLoading ? "Loading..." : portfolio?.profile.full_name}
+ *       <button onClick={handleSave}>Save</button>
+ *     </div>
+ *   );
+ * }
+ * ```
+ */
 export function usePortfolioData() {
   const store = usePortfolioStore();
   const loadingRef = useRef(false);
   const { toast } = useToast();
 
+  /**
+   * Loads portfolio data from the API
+   * @async
+   * @function loadPortfolio
+   * @description Fetches portfolio data and updates the store. Shows error toast on failure.
+   */
   const loadPortfolio = useCallback(async () => {
     if (loadingRef.current || store.isLoading) return;
 
@@ -43,6 +101,12 @@ export function usePortfolioData() {
     }
   }, [store, toast]);
 
+  /**
+   * Retries loading portfolio data with cache clearing
+   * @async
+   * @function retry
+   * @description Clears cache and reloads portfolio data. Shows success toast on completion.
+   */
   const retry = useCallback(async () => {
     portfolioService.clearCache();
     await loadPortfolio();
@@ -447,4 +511,107 @@ export function usePortfolioData() {
     importJSON,
     resetToDefault,
   };
+}
+
+/**
+ * Read-only access to portfolio data
+ * Use this in display components that only need to show data
+ *
+ * @returns {Object} Read-only portfolio data
+ * @returns {EnhancedPortfolio | null} portfolio - Current portfolio data
+ * @returns {boolean} isLoading - Loading state
+ * @returns {string | null} error - Current error message
+ *
+ * @example
+ * ```tsx
+ * function PortfolioDisplay() {
+ *   const { portfolio, isLoading, error } = usePortfolioDataReadOnly();
+ *
+ *   if (isLoading) return <div>Loading...</div>;
+ *   if (error) return <div>Error: {error}</div>;
+ *   if (!portfolio) return <div>No portfolio found</div>;
+ *
+ *   return <div>{portfolio.profile.full_name}</div>;
+ * }
+ * ```
+ */
+export function usePortfolioDataReadOnly() {
+  const store = usePortfolioStore();
+  return {
+    portfolio: store.portfolio,
+    isLoading: store.isLoading,
+    error: store.error,
+  };
+}
+
+/**
+ * Hook that provides only CRUD operations
+ * Use this in admin/management components that need to modify data
+ *
+ * @returns {Object} Portfolio management functions
+ * @returns {Function} updateProfile - Update profile information
+ * @returns {Function} addExperience - Add new work experience
+ * @returns {Function} updateExperience - Update existing experience
+ * @returns {Function} removeExperience - Remove experience
+ * @returns {Function} addProject - Add new project
+ * @returns {Function} updateProject - Update existing project
+ * @returns {Function} removeProject - Remove project
+ * @returns {Function} updateSkills - Update skills list
+ * @returns {Function} updateTools - Update tools list
+ * @returns {Function} exportJSON - Export portfolio as JSON
+ * @returns {Function} importJSON - Import portfolio from JSON
+ * @returns {Function} resetToDefault - Reset to default portfolio
+ *
+ * @example
+ * ```tsx
+ * function AdminPanel() {
+ *   const { updateProfile, addProject } = usePortfolioActions();
+ *
+ *   const handleSave = async () => {
+ *     await updateProfile({ full_name: "New Name" });
+ *   };
+ *
+ *   return <button onClick={handleSave}>Save Changes</button>;
+ * }
+ * ```
+ */
+export function usePortfolioActions() {
+  const {
+    updateProfile,
+    addExperience,
+    updateExperience,
+    removeExperience,
+    addProject,
+    updateProject,
+    removeProject,
+    updateSkills,
+    updateTools,
+    exportJSON,
+    importJSON,
+    resetToDefault,
+  } = usePortfolioData();
+
+  return {
+    updateProfile,
+    addExperience,
+    updateExperience,
+    removeExperience,
+    addProject,
+    updateProject,
+    removeProject,
+    updateSkills,
+    updateTools,
+    exportJSON,
+    importJSON,
+    resetToDefault,
+  };
+}
+
+/**
+ * Direct access to portfolio store
+ * @deprecated Use usePortfolioData() instead for better type safety
+ * @returns {Object} Direct store access
+ */
+export function usePortfolioStoreDirect() {
+  return usePortfolioStore();
 }

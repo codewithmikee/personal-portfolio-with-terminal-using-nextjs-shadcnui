@@ -24,7 +24,7 @@ import { ProjectsEditor } from "@admin/projects-editor";
 import { SkillsEditor } from "@admin/skills-editor";
 import { PersonalInfoEditor } from "@admin/personal-info-editor";
 import { DataManager } from "@admin/data-manager";
-import { usePortfolioStore } from "@/hooks/use-portfolio-store";
+import { usePortfolioStore } from "@/lib/stores/portfolio.store";
 
 // Temporary placeholders to keep Admin UI active without pulling in
 // editors that are still being migrated to the enhanced schema.

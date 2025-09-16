@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import { usePortfolioStore } from "@/hooks/use-portfolio-store";
+import { usePortfolioStore } from "@/lib/stores/portfolio.store";
 import { SampleCard } from "@/components/admin-components/sample-card";
 import { ImportCard } from "@/components/admin-components/import-card";
 import { CVPreview } from "@/components/admin-components/cv-builder/cv-preview";
@@ -96,9 +96,9 @@ export default function CVBuilder() {
           {error && (
             <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
               <p className="text-red-600 dark:text-red-400">Error: {error}</p>
-              <Button 
-                variant="outline" 
-                size="sm" 
+              <Button
+                variant="outline"
+                size="sm"
                 onClick={() => loadPortfolio()}
                 className="mt-2"
               >
@@ -131,23 +131,27 @@ export default function CVBuilder() {
         </div>
       );
     }
-    
+
     if (error) {
       return (
         <div className="min-h-screen bg-background flex items-center justify-center">
           <div className="text-center">
-            <p className="text-red-600 dark:text-red-400 mb-4">Error: {error}</p>
+            <p className="text-red-600 dark:text-red-400 mb-4">
+              Error: {error}
+            </p>
             <Button onClick={() => loadPortfolio()}>Retry</Button>
           </div>
         </div>
       );
     }
-    
+
     if (!portfolio) {
       return (
         <div className="min-h-screen bg-background flex items-center justify-center">
           <div className="text-center">
-            <p className="text-muted-foreground mb-4">No portfolio data found</p>
+            <p className="text-muted-foreground mb-4">
+              No portfolio data found
+            </p>
             <Button onClick={() => loadPortfolio()}>Load Portfolio</Button>
           </div>
         </div>
@@ -187,23 +191,27 @@ export default function CVBuilder() {
         </div>
       );
     }
-    
+
     if (error) {
       return (
         <div className="min-h-screen bg-background flex items-center justify-center">
           <div className="text-center">
-            <p className="text-red-600 dark:text-red-400 mb-4">Error: {error}</p>
+            <p className="text-red-600 dark:text-red-400 mb-4">
+              Error: {error}
+            </p>
             <Button onClick={() => loadPortfolio()}>Retry</Button>
           </div>
         </div>
       );
     }
-    
+
     if (!portfolio) {
       return (
         <div className="min-h-screen bg-background flex items-center justify-center">
           <div className="text-center">
-            <p className="text-muted-foreground mb-4">No portfolio data found</p>
+            <p className="text-muted-foreground mb-4">
+              No portfolio data found
+            </p>
             <Button onClick={() => loadPortfolio()}>Load Portfolio</Button>
           </div>
         </div>

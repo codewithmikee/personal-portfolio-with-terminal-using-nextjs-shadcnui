@@ -13,7 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { usePortfolioStore } from "@/hooks/use-portfolio-store";
+import { usePortfolioStore } from "@/lib/stores/portfolio.store";
 import { Plus, Save, Trash2 } from "lucide-react";
 import type { Experience } from "@/types/portfolio";
 import { ProgrammingRole, JobType } from "@/types/portfolio";

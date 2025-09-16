@@ -10,13 +10,14 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { usePortfolioData } from "@/hooks/use-portfolio-data";
 import { Github, Linkedin, Mail, ArrowDown } from "lucide-react";
-import { usePortfolioStore } from "@/hooks/use-portfolio-store";
+// import { usePortfolioStore } from "@/hooks/use-portfolio-store";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
 export function Hero() {
-  const { portfolio, isLoading, error } = usePortfolioStore();
+  const { portfolio, isLoading, error } = usePortfolioData();
   const [isClient, setIsClient] = useState(false);
 
   // Set isClient to true after component mounts

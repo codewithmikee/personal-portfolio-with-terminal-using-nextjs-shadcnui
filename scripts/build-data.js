@@ -17,8 +17,8 @@ const path = require("path");
  * Converts development data to production-optimized format
  */
 
-const DATA_DIR = path.join(__dirname, "../data");
-const PORTFOLIO_DATA_PATH = path.join(DATA_DIR, "portfolio/portfolio.json");
+const DATA_DIR = path.join(__dirname, "../public/data");
+const PORTFOLIO_DATA_PATH = path.join(DATA_DIR, "portfolio.json");
 const PUBLIC_DATA_PATH = path.join(__dirname, "../public/data/portfolio.json");
 
 async function buildPortfolioData() {

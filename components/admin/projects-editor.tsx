@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { usePortfolioStore } from "@/hooks/use-portfolio-store";
+import { usePortfolioStore } from "@/lib/stores/portfolio.store";
 import type { Project } from "@/types/portfolio";
 import { Plus, Save, Trash2 } from "lucide-react";
 import { usePortfolioData } from "@/hooks/use-portfolio-data";

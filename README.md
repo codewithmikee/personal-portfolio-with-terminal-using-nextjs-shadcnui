@@ -1,233 +1,280 @@
-# Portfolio Website - Dual Navigation Interface
+# 🚀 Ultimate Portfolio Website with Terminal Interface
 
-A modern, interactive portfolio website built with Next.js and TypeScript, featuring both traditional UI navigation and a unique terminal simulator interface. Perfect for showcasing fullstack development skills with Laravel and Next.js expertise.
+A modern, interactive portfolio website built with Next.js 14, featuring a unique terminal interface, comprehensive admin panel, and real-time data management. Perfect for developers who want to showcase their work with style and functionality.
 
-**Author:** Mikiyas Birhanu  
-**Email:** codewithmikee@gmail.com  
-**Repository:** https://github.com/codewithmikee/personal-portfolio-with-terminal-using-nextjs-shadcnui.git
+![Portfolio Preview](https://img.shields.io/badge/Next.js-14-black?style=for-the-badge&logo=next.js)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?style=for-the-badge&logo=typescript)
+![Prisma](https://img.shields.io/badge/Prisma-5.0-2D3748?style=for-the-badge&logo=prisma)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.0-38B2AC?style=for-the-badge&logo=tailwind-css)
 
 ## ✨ Features
 
-### Dual Navigation System
+### 🎯 Core Features
 
-- **Traditional UI**: Clean, modern interface with smooth scrolling navigation
-- **Terminal Simulator**: Interactive command-line interface with Unix-like commands
-- **Shared Content Source**: Both interfaces pull from the same centralized data
+- **Interactive Terminal Interface** - Navigate your portfolio like a developer
+- **Real-time Admin Panel** - Manage your portfolio data with live updates
+- **Responsive Design** - Perfect on desktop, tablet, and mobile
+- **Dark/Light Theme** - Toggle between themes seamlessly
+- **Toast Notifications** - User-friendly feedback for all actions
+- **Optimistic Updates** - Instant UI updates with rollback on errors
 
-### Content Management
+### 🛠 Technical Features
 
-- **Admin Panel**: Easy-to-use content management at `/admin`
-- **Real-time Updates**: Changes reflect immediately in both UI and terminal modes
-- **Persistent Storage**: Content saved locally with state management
+- **Next.js 14** with App Router
+- **TypeScript** for type safety
+- **Prisma ORM** with SQLite database
+- **Zustand** for state management
+- **Tailwind CSS** for styling
+- **Radix UI** components
+- **Lucide React** icons
+- **Toast notifications** for user feedback
 
-### Terminal Features
+### 📊 Portfolio Management
 
-- **Directory Navigation**: Use `cd`, `ls`, `pwd` commands like a real terminal
-- **Color-coded Output**: Success (green), warnings (yellow), errors (red)
-- **Command History**: Navigate previous commands with arrow keys
-- **File System Simulation**: Browse projects and files with `cat` command
+- **Profile Management** - Personal information and contact details
+- **Experience Tracking** - Work history with detailed descriptions
+- **Project Showcase** - Featured projects with links and descriptions
+- **Skills & Tools** - Technical skills and tools you use
+- **Real-time Editing** - Edit content directly in the admin panel
+- **Data Export/Import** - JSON-based data portability
 
 ## 🚀 Quick Start
 
 ### Prerequisites
 
 - Node.js 18+
-- pnpm or yarn
+- pnpm (recommended) or npm
 
 ### Installation
 
 1. **Clone the repository**
-   \`\`\`bash
-   git clone <your-repo-url>
-   cd portfolio-website
-   \`\`\`
+
+   ```bash
+   git clone https://github.com/codewithmikee/ultimate-portfolio-website.git
+   cd ultimate-portfolio-website
+   ```
 
 2. **Install dependencies**
-   \`\`\`bash
+
+   ```bash
    pnpm install
-
    # or
+   npm install
+   ```
 
-   yarn install
-   \`\`\`
+3. **Set up the database**
 
-3. **Run development server**
-   \`\`\`bash
+   ```bash
+   pnpm prisma generate
+   pnpm prisma db push
+   pnpm prisma db seed
+   ```
+
+4. **Start the development server**
+
+   ```bash
    pnpm dev
-
    # or
+   npm run dev
+   ```
 
-   yarn dev
-   \`\`\`
-
-4. **Open your browser**
+5. **Open your browser**
    Navigate to [http://localhost:3000](http://localhost:3000)
-
-## 🎯 Usage Guide
-
-### Navigation Modes
-
-#### UI Mode (Default)
-
-- Clean, responsive interface with navigation menu
-- Smooth scrolling between sections
-- Click "Terminal" button to switch modes
-
-#### Terminal Mode
-
-- Type `help` to see available commands
-- Use `cd <section>` to navigate (e.g., `cd projects`)
-- Use `ls` to list contents of current directory
-- Use `cat <item>` to view detailed information
-- Type `ui` to switch back to UI mode
-
-### Terminal Commands
-
-| Command      | Description                 | Example         |
-| ------------ | --------------------------- | --------------- |
-| `help`       | Show all available commands | `help`          |
-| `about`      | Display about information   | `about`         |
-| `projects`   | List all projects           | `projects`      |
-| `skills`     | Show technical skills       | `skills`        |
-| `experience` | Display work experience     | `experience`    |
-| `contact`    | Show contact information    | `contact`       |
-| `cd <path>`  | Navigate to directory       | `cd projects`   |
-| `ls`         | List directory contents     | `ls`            |
-| `pwd`        | Show current directory      | `pwd`           |
-| `cat <file>` | Display file contents       | `cat project-1` |
-| `clear`      | Clear terminal screen       | `clear`         |
-| `ui`         | Switch to UI mode           | `ui`            |
-| `stats`      | Show portfolio statistics   | `stats`         |
-
-### Content Management
-
-1. **Access Admin Panel**
-
-   - Navigate to `/admin` in your browser
-   - No login required (add authentication as needed)
-
-2. **Edit Content**
-
-   - **Personal Info**: Update name, title, bio, and contact details
-   - **Projects**: Add/edit/delete projects with descriptions and tech stacks
-   - **Experience**: Manage work history and achievements
-   - **Skills**: Update technical skills with proficiency levels
-
-3. **Save Changes**
-   - Changes are automatically saved to local storage
-   - Refresh the page to see updates in both UI and terminal modes
-
-## 🛠️ Technology Stack
-
-- **Framework**: Next.js 14 with App Router
-- **Language**: TypeScript
-- **Styling**: Tailwind CSS v4
-- **UI Components**: Radix UI + shadcn/ui
-- **State Management**: Zustand with persistence
-- **Icons**: Lucide React
-- **Development**: ESLint, PostCSS
 
 ## 📁 Project Structure
 
-\`\`\`
-├── app/
-│ ├── admin/ # Admin panel route
-│ ├── layout.tsx # Root layout with theme provider
-│ ├── page.tsx # Main portfolio page
-│ └── globals.css # Global styles and design tokens
-├── components/
-│ ├── admin/ # Admin panel components
-│ ├── sections/ # Portfolio sections (hero, about, etc.)
-│ ├── ui/ # Reusable UI components
-│ ├── navigation.tsx # Main navigation component
-│ ├── portfolio-ui.tsx # Traditional UI interface
-│ └── terminal-simulator.tsx # Terminal interface
-├── lib/
-│ ├── hooks/ # Custom React hooks
-│ ├── portfolio-data.ts # Centralized content data
-│ └── utils.ts # Utility functions
-└── public/ # Static assets
-\`\`\`
+```
+portfolio-website/
+├── app/                    # Next.js App Router
+│   ├── admin/             # Admin panel pages
+│   ├── api/               # API routes
+│   ├── manage/            # Portfolio management
+│   └── page.tsx           # Main portfolio page
+├── components/            # React components
+│   ├── admin/             # Admin-specific components
+│   ├── sections/          # Portfolio sections
+│   └── ui/                # Reusable UI components
+├── hooks/                 # Custom React hooks
+├── lib/                   # Utility libraries
+│   ├── services/          # API services
+│   └── stores/            # State management
+├── prisma/                # Database schema and migrations
+├── public/                # Static assets
+└── types/                 # TypeScript type definitions
+```
 
 ## 🎨 Customization
 
-### Design Tokens
+### Personal Information
 
-Edit `app/globals.css` to customize:
+1. Navigate to `/admin` or `/manage`
+2. Update your profile information
+3. Add your work experience
+4. Showcase your projects
+5. List your skills and tools
 
-- Color scheme (currently cyan/amber professional theme)
-- Typography (Geist Sans/Mono fonts)
-- Spacing and layout tokens
+### Styling
 
-### Content Data
+- Modify `app/globals.css` for global styles
+- Update component styles in `components/`
+- Customize theme colors in `tailwind.config.js`
 
-Update `lib/portfolio-data.ts` to modify:
+### Database Schema
 
-- Personal information
-- Project details
-- Work experience
-- Technical skills
-- Contact information
+- Edit `prisma/schema.prisma` to modify data structure
+- Run `pnpm prisma db push` to apply changes
 
-### Terminal Commands
+## 🔧 API Documentation
 
-Extend `lib/hooks/use-terminal-commands.ts` to add:
+### Portfolio Endpoints
 
-- New commands
-- Custom responses
-- Additional navigation paths
+#### GET `/api/portfolios`
+
+Retrieve all portfolios
+
+```typescript
+Response: EnhancedPortfolio[]
+```
+
+#### GET `/api/portfolios/[id]`
+
+Retrieve specific portfolio
+
+```typescript
+Response: EnhancedPortfolio;
+```
+
+#### PATCH `/api/portfolios/[id]`
+
+Update portfolio data
+
+```typescript
+Body: {
+  profile?: { update: Partial<Profile> },
+  experience?: { create: Experience } | { updateMany: { where: { id: number }, data: Partial<Experience> } } | { deleteMany: { id: number } },
+  projects?: { create: Project } | { updateMany: { where: { id: number }, data: Partial<Project> } } | { deleteMany: { id: number } },
+  skills?: { set: Skill[] },
+  tools?: { set: Tool[] }
+}
+```
+
+## 🎣 Hooks API
+
+### `usePortfolioData()`
+
+Main hook for portfolio management
+
+```typescript
+const {
+  portfolio, // Current portfolio data
+  isLoading, // Loading state
+  error, // Error message
+  loadPortfolio, // Load data from API
+  retry, // Retry failed operations
+  updateProfile, // Update profile info
+  addExperience, // Add work experience
+  updateExperience, // Update experience
+  removeExperience, // Remove experience
+  addProject, // Add project
+  updateProject, // Update project
+  removeProject, // Remove project
+  updateSkills, // Update skills
+  updateTools, // Update tools
+  exportJSON, // Export as JSON
+  importJSON, // Import from JSON
+  resetToDefault, // Reset to defaults
+} = usePortfolioData();
+```
+
+### `usePortfolioDataReadOnly()`
+
+Read-only access for display components
+
+```typescript
+const { portfolio, isLoading, error } = usePortfolioDataReadOnly();
+```
+
+### `usePortfolioActions()`
+
+CRUD operations only
+
+```typescript
+const {
+  updateProfile,
+  addExperience,
+  // ... other actions
+} = usePortfolioActions();
+```
+
+## 🎨 Components
+
+### Portfolio Sections
+
+- **Hero** - Introduction and main CTA
+- **About** - Personal information and bio
+- **Experience** - Work history timeline
+- **Projects** - Featured projects showcase
+- **Skills** - Technical skills and tools
+- **Contact** - Contact information and social links
+
+### Admin Components
+
+- **AdminPanel** - Main admin interface
+- **DataManager** - Data import/export
+- **Editors** - Individual section editors
+- **CVBuilder** - Resume/CV builder interface
 
 ## 🚀 Deployment
 
 ### Vercel (Recommended)
 
-1. Push code to GitHub
-2. Connect repository to Vercel
-3. Deploy automatically
+1. Push your code to GitHub
+2. Connect your repository to Vercel
+3. Set environment variables if needed
+4. Deploy!
 
 ### Other Platforms
 
-\`\`\`bash
-
-# Build for production
-
-npm run build
-
-# Start production server
-
-npm start
-\`\`\`
-
-## 📝 Development Scripts
-
-\`\`\`bash
-npm run dev # Start development server
-npm run build # Build for production
-npm run start # Start production server
-npm run lint # Run ESLint
-\`\`\`
+- **Netlify** - Static export with API routes
+- **Railway** - Full-stack deployment
+- **DigitalOcean** - VPS deployment
 
 ## 🤝 Contributing
+
+We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.md) for details.
+
+### Development Setup
 
 1. Fork the repository
 2. Create a feature branch
 3. Make your changes
-4. Test both UI and terminal modes
+4. Add tests if applicable
 5. Submit a pull request
 
-## 📄 License
+## 📝 License
 
-This project is open source and available under the [MIT License](LICENSE).
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🆘 Support
+## 🙏 Acknowledgments
 
-If you encounter any issues:
+- **Next.js** team for the amazing framework
+- **Vercel** for hosting and deployment
+- **Prisma** team for the excellent ORM
+- **Radix UI** for accessible components
+- **Tailwind CSS** for utility-first styling
 
-1. Check the terminal commands with `help`
-2. Verify admin panel access at `/admin`
-3. Check browser console for errors
-4. Ensure all dependencies are installed
+## 📞 Support
+
+- **Issues** - [GitHub Issues](https://github.com/codewithmikee/ultimate-portfolio-website/issues)
+- **Discussions** - [GitHub Discussions](https://github.com/codewithmikee/ultimate-portfolio-website/discussions)
+- **Email** - codewithmikee@gmail.com
+
+## 🌟 Show Your Support
+
+If you found this project helpful, please give it a ⭐ on GitHub!
 
 ---
 
-**Built with ❤️ using Next.js, TypeScript, and creativity**
+**Made with ❤️ by [Mikiyas Birhanu](https://github.com/codewithmikee)**
+
+_Building the future, one portfolio at a time._
