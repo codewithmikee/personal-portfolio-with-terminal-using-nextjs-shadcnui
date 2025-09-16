@@ -436,6 +436,12 @@
   ],
   "tools": [
     {
+      "title": "Cursor"
+    },
+    {
+      "title": "21dev"
+    },
+    {
       "title": "Docker"
     },
     {

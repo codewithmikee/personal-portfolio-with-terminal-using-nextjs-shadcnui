@@ -29,6 +29,19 @@ A modern, interactive portfolio website built with Next.js 14, featuring a uniqu
 - **Lucide React** icons
 - **Toast notifications** for user feedback
 
+### 🛠 Development Tools
+
+This project was built and maintained using modern development tools:
+
+- **Cursor** - AI-powered code editor for enhanced development experience
+- **21dev** - UI component library and design system integration
+- **Docker** - Containerization for consistent development environments
+- **Git** - Version control and collaboration
+- **Composer** - PHP dependency management
+- **npm/pnpm** - Node.js package management
+- **PHPUnit** - PHP testing framework
+- **Postman** - API testing and documentation
+
 ### 📊 Portfolio Management
 
 - **Profile Management** - Personal information and contact details
@@ -223,6 +236,28 @@ const {
 - **DataManager** - Data import/export
 - **Editors** - Individual section editors
 - **CVBuilder** - Resume/CV builder interface
+
+## 🗺️ Roadmap & Future Features
+
+### 🚧 In Development
+
+- **AI Agent Integration** - Interactive AI assistant for portfolio navigation and Q&A
+- **CV/PDF Export** - Generate downloadable CV and PDF versions of the portfolio
+- **Contact Form** - Interactive contact form with backend integration and email notifications
+- **Data Source Enhancement** - More comprehensive portfolio data structure and validation
+
+### 🎯 Planned Features
+
+- **Multi-language Support** - Internationalization for global reach
+- **Analytics Dashboard** - Visitor insights and portfolio performance metrics
+- **Blog Integration** - Content management system for blog posts
+- **Project Demos** - Interactive project demonstrations and live previews
+- **Testimonials** - Client and colleague testimonials section
+- **Advanced Terminal Commands** - More interactive terminal features and games
+
+### 🤝 Contributing
+
+We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details on how to get started.
 
 ## 🚀 Deployment
 

@@ -10,6 +10,19 @@ Thank you for your interest in contributing to this project! This document provi
 - pnpm (recommended) or npm
 - Git
 
+### 🛠 Development Tools
+
+This project uses modern development tools for enhanced productivity:
+
+- **Cursor** - AI-powered code editor (recommended for best experience)
+- **21dev** - UI component library integration
+- **Docker** - For consistent development environments
+- **Git** - Version control
+- **Composer** - PHP dependency management
+- **npm/pnpm** - Node.js package management
+- **PHPUnit** - PHP testing
+- **Postman** - API testing
+
 ### Development Setup
 
 1. **Fork the repository**
@@ -37,6 +50,24 @@ Thank you for your interest in contributing to this project! This document provi
    ```bash
    pnpm dev
    ```
+
+## 🚧 Current Development Status
+
+### In Progress
+
+- **AI Agent Integration** - Interactive AI assistant for portfolio navigation
+- **CV/PDF Export** - Generate downloadable CV and PDF versions
+- **Contact Form** - Interactive contact form with backend integration
+- **Data Source Enhancement** - Enhanced portfolio data structure
+
+### Available for Contribution
+
+- **Multi-language Support** - Internationalization features
+- **Analytics Dashboard** - Visitor insights and metrics
+- **Blog Integration** - Content management system
+- **Project Demos** - Interactive project demonstrations
+- **Testimonials** - Client testimonials section
+- **Advanced Terminal Commands** - More terminal features
 
 ## 📋 How to Contribute
 
