@@ -26,7 +26,10 @@ export function SkillsEditor() {
   const handleAddSkill = () => {
     const title = newSkill.trim();
     if (title) {
-      const skill: Skill = { title };
+      const skill: Skill = {
+        id: `skill-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+        title,
+      };
       setSkills([...skills, skill]);
       setNewSkill("");
     }
@@ -38,7 +41,10 @@ export function SkillsEditor() {
 
   const handleUpdateSkill = (index: number, value: string) => {
     const updated = [...skills];
-    updated[index] = { title: value };
+    updated[index] = {
+      id: updated[index].id,
+      title: value,
+    };
     setSkills(updated);
   };
 

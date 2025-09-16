@@ -26,7 +26,13 @@ export function SkillsForm({
 
   const addSkill = () => {
     if (newSkill.trim()) {
-      onUpdateSkills([...skills, { title: newSkill.trim() }]);
+      onUpdateSkills([
+        ...skills,
+        {
+          id: `skill-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+          title: newSkill.trim(),
+        },
+      ]);
       setNewSkill("");
     }
   };
