@@ -36,6 +36,7 @@ interface PortfolioState {
   ) => void;
   removeExperience: (index: number) => void;
   updateTechStacks: (techStacks: EnhancedPortfolio["techStacks"]) => void;
+  updateSkills: (skills: EnhancedPortfolio["skills"]) => void;
   updateData: (newData: EnhancedPortfolio) => void;
   resetToDefault: () => void;
   loadData: () => Promise<void>;
@@ -154,6 +155,17 @@ export const usePortfolioContext = create<PortfolioState>()(
             data: {
               ...state.data,
               techStacks,
+            },
+          };
+        }),
+
+      updateSkills: (skills) =>
+        set((state) => {
+          if (!state.data) return state;
+          return {
+            data: {
+              ...state.data,
+              skills,
             },
           };
         }),

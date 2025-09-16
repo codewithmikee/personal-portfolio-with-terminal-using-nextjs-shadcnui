@@ -6,17 +6,8 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Badge } from "@/components/ui/badge";
 import { usePortfolioContext } from "@/lib/hooks/use-portfolio-context";
-import { Plus, Save, Trash2, X } from "lucide-react";
+import { Plus, Save, Trash2 } from "lucide-react";
 import type { Project } from "@/data/schemas/portfolio";
 
 export function ProjectsEditor() {
@@ -27,112 +18,47 @@ export function ProjectsEditor() {
     return <div>Loading...</div>;
   }
 
-  const [editingProject, setEditingProject] = useState<Project | null>(null);
-  const [isCreating, setIsCreating] = useState(false);
-
-  const emptyProject: Omit<Project, "id"> = {
+  const emptyProject: Project = {
     title: "",
-    slug: "",
     description: "",
-    detailed_description: "",
-    category: "fullstack",
-    subcategory: "",
-    technologies: {
-      backend: [],
-      frontend: [],
-      database: [],
-      apis: [],
-      tools: [],
-    },
-    status: "completed",
-    timeline: {
-      start_date: "",
-      end_date: "",
-      duration_months: 0,
-    },
-    urls: {
-      live_url: "",
-      github_url: "",
-      case_study_url: "",
-      blog_post_url: "",
-    },
-    media: {
-      thumbnail: "",
-      gallery: [],
-    },
-    my_role: "",
-    key_challenges: [],
-    solutions_implemented: [],
-    featured: false,
-    order: 0,
+    link: "",
+    features: [],
   };
 
-  const [formData, setFormData] = useState(emptyProject);
-  const [newTech, setNewTech] = useState("");
+  const [formData, setFormData] = useState<Project>(emptyProject);
+  const [editingIndex, setEditingIndex] = useState<number | null>(null);
+  const [isCreating, setIsCreating] = useState(false);
 
-  const handleEdit = (project: Project) => {
-    setEditingProject(project);
+  const handleEdit = (index: number, project: Project) => {
+    setEditingIndex(index);
     setFormData(project);
     setIsCreating(false);
   };
 
   const handleCreate = () => {
-    setEditingProject(null);
+    setEditingIndex(null);
     setFormData(emptyProject);
     setIsCreating(true);
   };
 
   const handleSave = () => {
     if (isCreating) {
-      const newProject: Project = {
-        ...formData,
-        id: Date.now().toString(),
-      };
-      addProject(newProject);
-    } else if (editingProject) {
-      updateProject(editingProject.id, formData);
+      addProject(formData);
+    } else if (editingIndex !== null) {
+      updateProject(editingIndex, formData);
     }
-    setEditingProject(null);
+    setEditingIndex(null);
     setIsCreating(false);
     setFormData(emptyProject);
   };
 
   const handleCancel = () => {
-    setEditingProject(null);
+    setEditingIndex(null);
     setIsCreating(false);
     setFormData(emptyProject);
   };
 
-  const handleAddTechnology = () => {
-    if (newTech.trim()) {
-      const allTechs = Object.values(formData.technologies).flat();
-      if (!allTechs.includes(newTech.trim())) {
-        setFormData((prev) => ({
-          ...prev,
-          technologies: {
-            ...prev.technologies,
-            tools: [...prev.technologies.tools, newTech.trim()],
-          },
-        }));
-        setNewTech("");
-      }
-    }
-  };
-
-  const handleRemoveTechnology = (tech: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      technologies: {
-        backend: prev.technologies.backend.filter((t) => t !== tech),
-        frontend: prev.technologies.frontend.filter((t) => t !== tech),
-        database: prev.technologies.database.filter((t) => t !== tech),
-        apis: prev.technologies.apis.filter((t) => t !== tech),
-        tools: prev.technologies.tools.filter((t) => t !== tech),
-      },
-    }));
-  };
-
-  if (isCreating || editingProject) {
+  if (isCreating || editingIndex !== null) {
     return (
       <Card>
         <CardHeader>
@@ -154,32 +80,21 @@ export function ProjectsEditor() {
               />
             </div>
             <div>
-              <Label htmlFor="category">Category</Label>
-              <Select
-                value={formData.category}
-                onValueChange={(value) =>
-                  setFormData((prev) => ({
-                    ...prev,
-                    category: value as Project["category"],
-                  }))
+              <Label htmlFor="link">Project Link</Label>
+              <Input
+                id="link"
+                value={formData.link}
+                onChange={(e) =>
+                  setFormData((prev) => ({ ...prev, link: e.target.value }))
                 }
-              >
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="fullstack">Full Stack</SelectItem>
-                  <SelectItem value="frontend">Frontend</SelectItem>
-                  <SelectItem value="backend">Backend</SelectItem>
-                  <SelectItem value="mobile">Mobile</SelectItem>
-                </SelectContent>
-              </Select>
+                placeholder="https://example.com"
+              />
             </div>
           </div>
 
           <div>
-            <Label htmlFor="description">Short Description</Label>
-            <Input
+            <Label htmlFor="description">Description</Label>
+            <Textarea
               id="description"
               value={formData.description}
               onChange={(e) =>
@@ -189,112 +104,8 @@ export function ProjectsEditor() {
                 }))
               }
               placeholder="Brief project description"
-            />
-          </div>
-
-          <div>
-            <Label htmlFor="detailed_description">Detailed Description</Label>
-            <Textarea
-              id="detailed_description"
-              value={formData.detailed_description}
-              onChange={(e) =>
-                setFormData((prev) => ({
-                  ...prev,
-                  detailed_description: e.target.value,
-                }))
-              }
-              placeholder="Detailed project description"
               rows={4}
             />
-          </div>
-
-          <div>
-            <Label>Technologies</Label>
-            <div className="flex gap-2 mb-2">
-              <Input
-                value={newTech}
-                onChange={(e) => setNewTech(e.target.value)}
-                placeholder="Add technology"
-                onKeyPress={(e) => e.key === "Enter" && handleAddTechnology()}
-              />
-              <Button type="button" onClick={handleAddTechnology}>
-                <Plus className="w-4 h-4" />
-              </Button>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {Object.values(formData.technologies)
-                .flat()
-                .map((tech) => (
-                  <Badge
-                    key={tech}
-                    variant="secondary"
-                    className="flex items-center gap-1"
-                  >
-                    {tech}
-                    <X
-                      className="w-3 h-3 cursor-pointer"
-                      onClick={() => handleRemoveTechnology(tech)}
-                    />
-                  </Badge>
-                ))}
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <Label htmlFor="githubUrl">GitHub URL</Label>
-              <Input
-                id="githubUrl"
-                value={formData.urls?.github_url || ""}
-                onChange={(e) =>
-                  setFormData((prev) => ({
-                    ...prev,
-                    urls: { ...prev.urls, github_url: e.target.value },
-                  }))
-                }
-                placeholder="https://github.com/..."
-              />
-            </div>
-            <div>
-              <Label htmlFor="liveUrl">Live Demo URL</Label>
-              <Input
-                id="liveUrl"
-                value={formData.urls?.live_url || ""}
-                onChange={(e) =>
-                  setFormData((prev) => ({
-                    ...prev,
-                    urls: { ...prev.urls, live_url: e.target.value },
-                  }))
-                }
-                placeholder="https://example.com"
-              />
-            </div>
-          </div>
-
-          <div>
-            <Label htmlFor="imageUrl">Image URL</Label>
-            <Input
-              id="imageUrl"
-              value={formData.media?.thumbnail || ""}
-              onChange={(e) =>
-                setFormData((prev) => ({
-                  ...prev,
-                  media: { ...prev.media, thumbnail: e.target.value },
-                }))
-              }
-              placeholder="https://example.com/image.jpg"
-            />
-          </div>
-
-          <div className="flex items-center space-x-2">
-            <Checkbox
-              id="featured"
-              checked={formData.featured}
-              onCheckedChange={(checked) =>
-                setFormData((prev) => ({ ...prev, featured: !!checked }))
-              }
-            />
-            <Label htmlFor="featured">Featured Project</Label>
           </div>
 
           <div className="flex gap-2">
@@ -315,7 +126,7 @@ export function ProjectsEditor() {
     <div className="space-y-4">
       <div className="flex justify-between items-center">
         <h3 className="text-lg font-semibold">
-          Projects ({data.projects.projects.length})
+          Projects ({data.projects.length})
         </h3>
         <Button onClick={handleCreate}>
           <Plus className="w-4 h-4 mr-2" />
@@ -324,53 +135,28 @@ export function ProjectsEditor() {
       </div>
 
       <div className="grid gap-4">
-        {data.projects.projects.map((project) => (
-          <Card key={project.id}>
+        {data.projects.map((project, index) => (
+          <Card key={`${project.title}-${index}`}>
             <CardContent className="p-4">
               <div className="flex justify-between items-start">
                 <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-2">
-                    <h4 className="font-semibold">{project.title}</h4>
-                    {project.featured && (
-                      <Badge variant="secondary">Featured</Badge>
-                    )}
-                    <Badge variant="outline">{project.category}</Badge>
-                  </div>
+                  <h4 className="font-semibold">{project.title}</h4>
                   <p className="text-sm text-muted-foreground mb-2">
                     {project.description}
                   </p>
-                  <div className="flex flex-wrap gap-1">
-                    {Object.values(project.technologies)
-                      .flat()
-                      .slice(0, 3)
-                      .map((tech) => (
-                        <Badge
-                          key={tech}
-                          variant="secondary"
-                          className="text-xs"
-                        >
-                          {tech}
-                        </Badge>
-                      ))}
-                    {Object.values(project.technologies).flat().length > 3 && (
-                      <Badge variant="outline" className="text-xs">
-                        +{Object.values(project.technologies).flat().length - 3}
-                      </Badge>
-                    )}
-                  </div>
                 </div>
                 <div className="flex gap-2">
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => handleEdit(project)}
+                    onClick={() => handleEdit(index, project)}
                   >
                     Edit
                   </Button>
                   <Button
                     variant="destructive"
                     size="sm"
-                    onClick={() => removeProject(project.id)}
+                    onClick={() => removeProject(index)}
                   >
                     <Trash2 className="w-4 h-4" />
                   </Button>

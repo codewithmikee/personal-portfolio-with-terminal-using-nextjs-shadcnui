@@ -7,65 +7,35 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { usePortfolioContext } from "@/lib/hooks/use-portfolio-context";
+import type { Profile } from "@/data/schemas/portfolio";
 import { Save } from "lucide-react";
 
 export function PersonalInfoEditor() {
-  const { data, updatePersonal } = usePortfolioContext();
-  const [formData, setFormData] = useState(
-    data?.personal || {
-      name: "",
-      title: "",
-      tagline: "",
-      bio: "",
-      location: "",
-      avatar: "",
-      resume_url: "",
-      specializations: [],
-      years_experience: 0,
-      current_status: "available" as const,
-      contact: {
-        email: "",
-        phone: "",
-        website: "",
-        github: "",
-        linkedin: "",
-        twitter: "",
-        blog_url: "",
-      },
-      stats: {
-        projects_completed: 0,
-        blog_posts_written: 0,
-        years_experience: 0,
-        technologies_mastered: 0,
-      },
+  const { data, updateProfile } = usePortfolioContext();
+  const [formData, setFormData] = useState<Profile>(
+    data?.profile || {
+      full_name: "",
+      email: "",
+      phone_number: "",
+      address: "",
+      description: "",
+      profile_picture: "",
+      contacts: [],
     }
   );
 
   useEffect(() => {
-    if (data?.personal) {
-      setFormData(data.personal);
+    if (data?.profile) {
+      setFormData(data.profile);
     }
   }, [data]);
 
   const handleSave = () => {
-    console.log("Handle save form data", formData);
-    updatePersonal(formData);
+    updateProfile(formData);
   };
 
-  const handleChange = (field: string, value: string) => {
-    setFormData((prev) => {
-      if (field.includes(".")) {
-        const [parent, child] = field.split(".");
-        return {
-          ...prev,
-          [parent]: {
-            ...(prev[parent as keyof typeof prev] as any),
-            [child]: value,
-          },
-        };
-      }
-      return { ...prev, [field]: value };
-    });
+  const handleChange = (field: keyof Profile, value: string) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
   return (
@@ -76,31 +46,31 @@ export function PersonalInfoEditor() {
       <CardContent className="space-y-4">
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <Label htmlFor="name">Full Name</Label>
+            <Label htmlFor="full_name">Full Name</Label>
             <Input
-              id="name"
-              value={formData.name}
-              onChange={(e) => handleChange("name", e.target.value)}
+              id="full_name"
+              value={formData.full_name}
+              onChange={(e) => handleChange("full_name", e.target.value)}
               placeholder="Your full name"
             />
           </div>
           <div>
-            <Label htmlFor="title">Professional Title</Label>
+            <Label htmlFor="phone_number">Phone Number</Label>
             <Input
-              id="title"
-              value={formData.title}
-              onChange={(e) => handleChange("title", e.target.value)}
-              placeholder="e.g., Full Stack Developer"
+              id="phone_number"
+              value={formData.phone_number}
+              onChange={(e) => handleChange("phone_number", e.target.value)}
+              placeholder="e.g., +1 555-555-5555"
             />
           </div>
         </div>
 
         <div>
-          <Label htmlFor="bio">Bio</Label>
+          <Label htmlFor="description">Bio</Label>
           <Textarea
-            id="bio"
-            value={formData.bio}
-            onChange={(e) => handleChange("bio", e.target.value)}
+            id="description"
+            value={formData.description}
+            onChange={(e) => handleChange("description", e.target.value)}
             placeholder="Tell us about yourself..."
             rows={4}
           />
@@ -112,49 +82,28 @@ export function PersonalInfoEditor() {
             <Input
               id="email"
               type="email"
-              value={formData.contact.email}
-              onChange={(e) => handleChange("contact.email", e.target.value)}
+              value={formData.email}
+              onChange={(e) => handleChange("email", e.target.value)}
               placeholder="your.email@example.com"
             />
           </div>
           <div>
-            <Label htmlFor="location">Location</Label>
+            <Label htmlFor="address">Address</Label>
             <Input
-              id="location"
-              value={formData.location}
-              onChange={(e) => handleChange("location", e.target.value)}
-              placeholder="City, Country"
-            />
-          </div>
-        </div>
-
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <Label htmlFor="github">GitHub URL</Label>
-            <Input
-              id="github"
-              value={formData.contact.github}
-              onChange={(e) => handleChange("contact.github", e.target.value)}
-              placeholder="https://github.com/username"
-            />
-          </div>
-          <div>
-            <Label htmlFor="linkedin">LinkedIn URL</Label>
-            <Input
-              id="linkedin"
-              value={formData.contact.linkedin}
-              onChange={(e) => handleChange("contact.linkedin", e.target.value)}
-              placeholder="https://linkedin.com/in/username"
+              id="address"
+              value={formData.address}
+              onChange={(e) => handleChange("address", e.target.value)}
+              placeholder="Street, City, Country"
             />
           </div>
         </div>
 
         <div>
-          <Label htmlFor="avatar">Avatar URL</Label>
+          <Label htmlFor="profile_picture">Profile Picture URL</Label>
           <Input
-            id="avatar"
-            value={formData.avatar}
-            onChange={(e) => handleChange("avatar", e.target.value)}
+            id="profile_picture"
+            value={formData.profile_picture}
+            onChange={(e) => handleChange("profile_picture", e.target.value)}
             placeholder="https://example.com/avatar.jpg"
           />
         </div>

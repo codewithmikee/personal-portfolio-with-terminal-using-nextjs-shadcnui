@@ -6,7 +6,6 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import {
   Select,
   SelectContent,
@@ -15,8 +14,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { usePortfolioContext } from "@/lib/hooks/use-portfolio-context";
-import { Plus, Save, Trash2, X } from "lucide-react";
+import { Plus, Save, Trash2 } from "lucide-react";
 import type { Experience } from "@/data/schemas/portfolio";
+import { ProgrammingRole, JobType } from "@/data/schemas/portfolio";
 
 export function ExperienceEditor() {
   const { data, addExperience, updateExperience, removeExperience } =
@@ -25,94 +25,51 @@ export function ExperienceEditor() {
   if (!data) {
     return <div>Loading...</div>;
   }
-  const [editingExperience, setEditingExperience] = useState<Experience | null>(
-    null
-  );
-  const [isCreating, setIsCreating] = useState(false);
 
-  const emptyExperience: Omit<Experience, "id"> = {
-    company: "",
-    company_url: "",
-    position: "",
-    location: "",
-    employment_type: "full-time",
-    timeline: {
-      start_date: "",
-      end_date: "",
-      duration: "",
-    },
-    overview: "",
-    key_responsibilities: [],
-    achievements: [],
-    technologies_used: [],
-    projects_led: [],
-    team_size: 1,
-    backend_work: {
-      apis_built: 0,
-      integrations: [],
-      database_optimizations: [],
-      security_implementations: [],
-    },
-    order: 0,
+  const emptyExperience: Experience = {
+    company_name: "",
+    company_description: "",
+    start_date: "",
+    end_date: null,
+    role: ProgrammingRole.FullStack,
+    job_type: JobType.FullTime,
+    contacts: [],
   };
 
-  const [formData, setFormData] = useState(emptyExperience);
-  const [newTech, setNewTech] = useState("");
+  const [formData, setFormData] = useState<Experience>(emptyExperience);
+  const [editingIndex, setEditingIndex] = useState<number | null>(null);
+  const [isCreating, setIsCreating] = useState(false);
 
-  const handleEdit = (experience: Experience) => {
-    setEditingExperience(experience);
+  const handleEdit = (index: number, experience: Experience) => {
+    setEditingIndex(index);
     setFormData(experience);
     setIsCreating(false);
   };
 
   const handleCreate = () => {
-    setEditingExperience(null);
+    setEditingIndex(null);
     setFormData(emptyExperience);
     setIsCreating(true);
   };
 
   const handleSave = () => {
     if (isCreating) {
-      const newExperience: Experience = {
-        ...formData,
-        id: Date.now().toString(),
-      };
-      addExperience(newExperience);
-    } else if (editingExperience) {
-      updateExperience(editingExperience.id, formData);
+      addExperience(formData);
+    } else if (editingIndex !== null) {
+      updateExperience(editingIndex, formData);
     }
-    setEditingExperience(null);
+    setEditingIndex(null);
     setIsCreating(false);
     setFormData(emptyExperience);
   };
 
   const handleCancel = () => {
-    setEditingExperience(null);
+    setEditingIndex(null);
     setIsCreating(false);
     setFormData(emptyExperience);
   };
 
-  const handleAddTechnology = () => {
-    if (
-      newTech.trim() &&
-      !formData.technologies_used.includes(newTech.trim())
-    ) {
-      setFormData((prev) => ({
-        ...prev,
-        technologies_used: [...prev.technologies_used, newTech.trim()],
-      }));
-      setNewTech("");
-    }
-  };
-
-  const handleRemoveTechnology = (tech: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      technologies_used: prev.technologies_used.filter((t) => t !== tech),
-    }));
-  };
-
-  if (isCreating || editingExperience) {
+  if (isCreating || editingIndex !== null) {
     return (
       <Card>
         <CardHeader>
@@ -123,49 +80,27 @@ export function ExperienceEditor() {
         <CardContent className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <Label htmlFor="company">Company</Label>
+              <Label htmlFor="company_name">Company Name</Label>
               <Input
-                id="company"
-                value={formData.company}
+                id="company_name"
+                value={formData.company_name}
                 onChange={(e) =>
-                  setFormData((prev) => ({ ...prev, company: e.target.value }))
+                  setFormData((prev) => ({
+                    ...prev,
+                    company_name: e.target.value,
+                  }))
                 }
                 placeholder="Company name"
               />
             </div>
             <div>
-              <Label htmlFor="position">Position</Label>
-              <Input
-                id="position"
-                value={formData.position}
-                onChange={(e) =>
-                  setFormData((prev) => ({ ...prev, position: e.target.value }))
-                }
-                placeholder="Job title"
-              />
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <Label htmlFor="location">Location</Label>
-              <Input
-                id="location"
-                value={formData.location}
-                onChange={(e) =>
-                  setFormData((prev) => ({ ...prev, location: e.target.value }))
-                }
-                placeholder="e.g., Remote, New York, NY"
-              />
-            </div>
-            <div>
-              <Label htmlFor="employment_type">Employment Type</Label>
+              <Label htmlFor="role">Role</Label>
               <Select
-                value={formData.employment_type}
+                value={formData.role}
                 onValueChange={(value) =>
                   setFormData((prev) => ({
                     ...prev,
-                    employment_type: value as Experience["employment_type"],
+                    role: value as ProgrammingRole,
                   }))
                 }
               >
@@ -173,13 +108,35 @@ export function ExperienceEditor() {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="full-time">Full-time</SelectItem>
-                  <SelectItem value="part-time">Part-time</SelectItem>
-                  <SelectItem value="contract">Contract</SelectItem>
-                  <SelectItem value="freelance">Freelance</SelectItem>
+                  <SelectItem value={ProgrammingRole.FullStack}>
+                    FullStack
+                  </SelectItem>
+                  <SelectItem value={ProgrammingRole.Frontend}>
+                    Frontend
+                  </SelectItem>
+                  <SelectItem value={ProgrammingRole.Backend}>
+                    Backend
+                  </SelectItem>
+                  <SelectItem value={ProgrammingRole.Mobile}>Mobile</SelectItem>
                 </SelectContent>
               </Select>
             </div>
+          </div>
+
+          <div>
+            <Label htmlFor="company_description">Company Description</Label>
+            <Textarea
+              id="company_description"
+              value={formData.company_description}
+              onChange={(e) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  company_description: e.target.value,
+                }))
+              }
+              placeholder="Describe the company and your work"
+              rows={4}
+            />
           </div>
 
           <div className="grid grid-cols-3 gap-4">
@@ -188,11 +145,11 @@ export function ExperienceEditor() {
               <Input
                 id="start_date"
                 type="date"
-                value={formData.timeline.start_date}
+                value={formData.start_date}
                 onChange={(e) =>
                   setFormData((prev) => ({
                     ...prev,
-                    timeline: { ...prev.timeline, start_date: e.target.value },
+                    start_date: e.target.value,
                   }))
                 }
               />
@@ -202,74 +159,36 @@ export function ExperienceEditor() {
               <Input
                 id="end_date"
                 type="date"
-                value={formData.timeline.end_date || ""}
+                value={formData.end_date ?? ""}
                 onChange={(e) =>
                   setFormData((prev) => ({
                     ...prev,
-                    timeline: { ...prev.timeline, end_date: e.target.value },
+                    end_date: e.target.value || null,
                   }))
                 }
               />
             </div>
             <div>
-              <Label htmlFor="duration">Duration</Label>
-              <Input
-                id="duration"
-                value={formData.timeline.duration}
-                onChange={(e) =>
+              <Label htmlFor="job_type">Job Type</Label>
+              <Select
+                value={formData.job_type}
+                onValueChange={(value) =>
                   setFormData((prev) => ({
                     ...prev,
-                    timeline: { ...prev.timeline, duration: e.target.value },
+                    job_type: value as JobType,
                   }))
                 }
-                placeholder="e.g., 2+ years"
-              />
-            </div>
-          </div>
-
-          <div>
-            <Label htmlFor="overview">Overview</Label>
-            <Textarea
-              id="overview"
-              value={formData.overview}
-              onChange={(e) =>
-                setFormData((prev) => ({
-                  ...prev,
-                  overview: e.target.value,
-                }))
-              }
-              placeholder="Describe your role and achievements"
-              rows={4}
-            />
-          </div>
-
-          <div>
-            <Label>Technologies Used</Label>
-            <div className="flex gap-2 mb-2">
-              <Input
-                value={newTech}
-                onChange={(e) => setNewTech(e.target.value)}
-                placeholder="Add technology"
-                onKeyPress={(e) => e.key === "Enter" && handleAddTechnology()}
-              />
-              <Button type="button" onClick={handleAddTechnology}>
-                <Plus className="w-4 h-4" />
-              </Button>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {formData.technologies_used.map((tech) => (
-                <Badge
-                  key={tech}
-                  variant="secondary"
-                  className="flex items-center gap-1"
-                >
-                  {tech}
-                  <X
-                    className="w-3 h-3 cursor-pointer"
-                    onClick={() => handleRemoveTechnology(tech)}
-                  />
-                </Badge>
-              ))}
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value={JobType.FullTime}>Full Time</SelectItem>
+                  <SelectItem value={JobType.PartTime}>Part Time</SelectItem>
+                  <SelectItem value={JobType.Contract}>Contract</SelectItem>
+                  <SelectItem value={JobType.Freelance}>Freelance</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </div>
 
@@ -300,44 +219,32 @@ export function ExperienceEditor() {
       </div>
 
       <div className="grid gap-4">
-        {data.experience.map((exp) => (
-          <Card key={exp.id}>
+        {data.experience.map((exp, index) => (
+          <Card key={`${exp.company_name}-${index}`}>
             <CardContent className="p-4">
               <div className="flex justify-between items-start">
                 <div className="flex-1">
-                  <h4 className="font-semibold">{exp.position}</h4>
-                  <p className="text-primary font-medium">{exp.company}</p>
+                  <h4 className="font-semibold">{exp.company_name}</h4>
                   <p className="text-sm text-muted-foreground mb-2">
-                    {exp.timeline?.duration || "Duration not specified"}
+                    {exp.start_date}
+                    {exp.end_date ? ` - ${exp.end_date}` : " - Present"}
                   </p>
-                  <p className="text-sm text-muted-foreground mb-2">
-                    {exp.overview}
+                  <p className="text-sm text-muted-foreground">
+                    {exp.company_description}
                   </p>
-                  <div className="flex flex-wrap gap-1">
-                    {exp.technologies_used?.slice(0, 4).map((tech) => (
-                      <Badge key={tech} variant="secondary" className="text-xs">
-                        {tech}
-                      </Badge>
-                    ))}
-                    {exp.technologies_used?.length > 4 && (
-                      <Badge variant="outline" className="text-xs">
-                        +{exp.technologies_used?.length - 4}
-                      </Badge>
-                    )}
-                  </div>
                 </div>
                 <div className="flex gap-2">
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => handleEdit(exp)}
+                    onClick={() => handleEdit(index, exp)}
                   >
                     Edit
                   </Button>
                   <Button
                     variant="destructive"
                     size="sm"
-                    onClick={() => removeExperience(exp.id)}
+                    onClick={() => removeExperience(index)}
                   >
                     <Trash2 className="w-4 h-4" />
                   </Button>

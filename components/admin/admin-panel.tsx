@@ -19,11 +19,25 @@ import {
   X,
   Database,
 } from "lucide-react";
-import { PersonalInfoEditor } from "@/components/admin/personal-info-editor";
-import { ProjectsEditor } from "@/components/admin/projects-editor";
-import { ExperienceEditor } from "@/components/admin/experience-editor";
-import { SkillsEditor } from "@/components/admin/skills-editor";
-import { DataManager } from "@/components/admin/data-manager";
+import { ExperienceEditor } from "@admin/experience-editor";
+import { ProjectsEditor } from "@admin/projects-editor";
+import { SkillsEditor } from "@admin/skills-editor";
+import { PersonalInfoEditor } from "@admin/personal-info-editor";
+import { DataManager } from "@admin/data-manager";
+
+// Temporary placeholders to keep Admin UI active without pulling in
+// editors that are still being migrated to the enhanced schema.
+function Placeholder({ title }: { title: string }) {
+  return (
+    <div className="rounded-md border p-6 text-sm text-muted-foreground">
+      <p className="mb-2 font-medium text-foreground">{title}</p>
+      <p>
+        This section is being migrated to the enhanced data structure. The UI
+        remains active; editing capabilities will be restored shortly.
+      </p>
+    </div>
+  );
+}
 
 interface AdminPanelProps {
   isOpen: boolean;

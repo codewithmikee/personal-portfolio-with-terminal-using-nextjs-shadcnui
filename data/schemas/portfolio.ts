@@ -118,6 +118,8 @@ export interface EnhancedPortfolio {
   blogs: Blog[];
 }
 
+export interface Portfolio extends EnhancedPortfolio {}
+
 // Utility types for better type safety
 export type TechStackKey = TechStack["key"];
 export type TechStackLevel = TechStack["level"];

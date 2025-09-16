@@ -21,7 +21,7 @@ import {
   AlertCircle,
   CheckCircle,
 } from "lucide-react";
-import type { PortfolioData } from "@/data/schemas/portfolio";
+import type { EnhancedPortfolio } from "@/data/schemas/portfolio";
 
 export function DataManager() {
   const { data, updateData, resetToDefault } = usePortfolioContext();
@@ -45,15 +45,7 @@ export function DataManager() {
         throw new Error("No data available to export");
       }
 
-      const exportData: PortfolioData = {
-        ...data,
-        metadata: {
-          ...data.metadata,
-          last_updated: new Date().toISOString(),
-        },
-      };
-
-      const jsonData = JSON.stringify(exportData, null, 2);
+      const jsonData = JSON.stringify(data as EnhancedPortfolio, null, 2);
       const blob = new Blob([jsonData], { type: "application/json" });
       const url = URL.createObjectURL(blob);
 
@@ -88,17 +80,12 @@ export function DataManager() {
         const jsonData = JSON.parse(e.target?.result as string);
 
         // Basic validation
-        if (
-          !jsonData.personal ||
-          !jsonData.projects ||
-          !jsonData.experience ||
-          !jsonData.skills
-        ) {
+        // Basic shape validation for EnhancedPortfolio
+        if (!jsonData.profile || !jsonData.projects || !jsonData.experience) {
           throw new Error("Invalid portfolio data structure");
         }
 
-        // Update data
-        updateData(jsonData);
+        updateData(jsonData as EnhancedPortfolio);
         showAlert("success", "Portfolio data imported successfully!");
       } catch (error) {
         console.error("Import failed:", error);
@@ -130,9 +117,9 @@ export function DataManager() {
   const getDataStats = () => {
     if (!data) return { projects: 0, experience: 0, skills: 0 };
 
-    const projectsCount = data.projects?.projects?.length || 0;
+    const projectsCount = data.projects?.length || 0;
     const experienceCount = data.experience?.length || 0;
-    const skillsCount = data.skills?.skills?.length || 0;
+    const skillsCount = data.skills?.length || 0;
     const dataSize = new Blob([JSON.stringify(data)]).size;
 
     return {
