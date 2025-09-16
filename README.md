@@ -2,6 +2,10 @@
 
 A modern, interactive portfolio website built with Next.js and TypeScript, featuring both traditional UI navigation and a unique terminal simulator interface. Perfect for showcasing fullstack development skills with Laravel and Next.js expertise.
 
+**Author:** Mikiyas Birhanu  
+**Email:** codewithmikee@gmail.com  
+**Repository:** https://github.com/codewithmikee/personal-portfolio-with-terminal-using-nextjs-shadcnui.git
+
 ## ✨ Features
 
 ### Dual Navigation System

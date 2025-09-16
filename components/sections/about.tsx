@@ -1,28 +1,52 @@
-"use client"
+"use client";
 
-import { Card, CardContent } from "@/components/ui/card"
-import { usePortfolioContext } from "@/lib/hooks/use-portfolio-context"
-import { MapPin } from "lucide-react"
+import { Card, CardContent } from "@/components/ui/card";
+import { usePortfolioContext } from "@/lib/hooks/use-portfolio-context";
+import { MapPin } from "lucide-react";
 
 export function About() {
-  const { data } = usePortfolioContext()
-  const { personal, projects, experience } = data
+  const { data, isLoading } = usePortfolioContext();
 
-  const totalProjects = projects.length
-  const yearsOfExperience =
-    experience.length > 0
-      ? new Date().getFullYear() - new Date(experience[experience.length - 1].duration.split(" - ")[0]).getFullYear()
-      : 0
+  if (isLoading || !data) {
+    return (
+      <section id="about" className="py-20 bg-muted/30">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto">
+            <div className="animate-pulse">
+              <div className="h-12 bg-muted rounded mb-12 w-1/3 mx-auto"></div>
+              <div className="grid md:grid-cols-2 gap-8">
+                <div className="space-y-4">
+                  <div className="h-4 bg-muted rounded"></div>
+                  <div className="h-4 bg-muted rounded"></div>
+                  <div className="h-4 bg-muted rounded w-3/4"></div>
+                </div>
+                <div className="h-64 bg-muted rounded"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  const { personal, projects, experience } = data;
+
+  const totalProjects = projects.projects.length;
+  const yearsOfExperience = data.personal.stats?.years_experience || 0;
 
   return (
     <section id="about" className="py-20 bg-muted/30">
       <div className="container mx-auto px-4">
         <div className="max-w-4xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">About Me</h2>
+          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
+            About Me
+          </h2>
 
           <div className="grid md:grid-cols-2 gap-8 items-center">
             <div>
-              <p className="text-lg text-muted-foreground mb-6 text-pretty">{personal.bio}</p>
+              <p className="text-lg text-muted-foreground mb-6 text-pretty">
+                {personal.bio}
+              </p>
 
               <div className="flex items-center text-muted-foreground mb-6">
                 <MapPin className="w-4 h-4 mr-2" />
@@ -47,10 +71,14 @@ export function About() {
                 <div className="space-y-3">
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Experience</span>
-                    <span className="font-medium">{yearsOfExperience}+ Years</span>
+                    <span className="font-medium">
+                      {yearsOfExperience}+ Years
+                    </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-muted-foreground">Projects Completed</span>
+                    <span className="text-muted-foreground">
+                      Projects Completed
+                    </span>
                     <span className="font-medium">{totalProjects}+</span>
                   </div>
                   <div className="flex justify-between">
@@ -59,7 +87,9 @@ export function About() {
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Availability</span>
-                    <span className="font-medium text-green-600">Open to Work</span>
+                    <span className="font-medium text-green-600">
+                      Open to Work
+                    </span>
                   </div>
                 </div>
               </CardContent>
@@ -68,5 +98,5 @@ export function About() {
         </div>
       </div>
     </section>
-  )
+  );
 }

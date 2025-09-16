@@ -1,27 +1,36 @@
-"use client"
+/**
+ * Terminal simulator component
+ * Provides an interactive terminal interface for portfolio navigation
+ *
+ * @author Mikiyas Birhanu
+ * @email codewithmikee@gmail.com
+ * @repo https://github.com/codewithmikee/personal-portfolio-with-terminal-using-nextjs-shadcnui.git
+ */
 
-import type React from "react"
+"use client";
 
-import { useState, useEffect, useRef } from "react"
-import { portfolioData, terminalCommands } from "@/lib/portfolio-data"
-import { useTerminalCommands } from "@/lib/hooks/use-terminal-commands"
-import { useTerminalNavigation } from "@/lib/hooks/use-terminal-navigation"
+import type React from "react";
+
+import { useState, useEffect, useRef } from "react";
+import { portfolioData, terminalCommands } from "@/lib/portfolio-data";
+import { useTerminalCommands } from "@/lib/hooks/use-terminal-commands";
+import { useTerminalNavigation } from "@/lib/hooks/use-terminal-navigation";
 
 interface TerminalLine {
-  type: "input" | "output" | "error" | "success" | "warning"
-  content: string
-  timestamp?: Date
+  type: "input" | "output" | "error" | "success" | "warning";
+  content: string;
+  timestamp?: Date;
 }
 
 export function TerminalSimulator() {
-  const [lines, setLines] = useState<TerminalLine[]>([])
-  const [currentInput, setCurrentInput] = useState("")
-  const [commandHistory, setCommandHistory] = useState<string[]>([])
-  const [historyIndex, setHistoryIndex] = useState(-1)
-  const inputRef = useRef<HTMLInputElement>(null)
-  const terminalRef = useRef<HTMLDivElement>(null)
-  const { executeCommand } = useTerminalCommands()
-  const { currentDirectory } = useTerminalNavigation()
+  const [lines, setLines] = useState<TerminalLine[]>([]);
+  const [currentInput, setCurrentInput] = useState("");
+  const [commandHistory, setCommandHistory] = useState<string[]>([]);
+  const [historyIndex, setHistoryIndex] = useState(-1);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const terminalRef = useRef<HTMLDivElement>(null);
+  const { executeCommand } = useTerminalCommands();
+  const { currentDirectory } = useTerminalNavigation();
 
   useEffect(() => {
     // Welcome message
@@ -40,26 +49,26 @@ export function TerminalSimulator() {
         type: "output",
         content: "",
       },
-    ])
+    ]);
 
     // Focus input on mount
     if (inputRef.current) {
-      inputRef.current.focus()
+      inputRef.current.focus();
     }
-  }, [])
+  }, []);
 
   useEffect(() => {
     // Auto-scroll to bottom
     if (terminalRef.current) {
-      terminalRef.current.scrollTop = terminalRef.current.scrollHeight
+      terminalRef.current.scrollTop = terminalRef.current.scrollHeight;
     }
-  }, [lines])
+  }, [lines]);
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!currentInput.trim()) return
+    e.preventDefault();
+    if (!currentInput.trim()) return;
 
-    const command = currentInput.trim()
+    const command = currentInput.trim();
 
     // Add input to lines
     setLines((prev) => [
@@ -69,14 +78,14 @@ export function TerminalSimulator() {
         content: `${currentDirectory} $ ${command}`,
         timestamp: new Date(),
       },
-    ])
+    ]);
 
     // Add to command history
-    setCommandHistory((prev) => [...prev, command])
-    setHistoryIndex(-1)
+    setCommandHistory((prev) => [...prev, command]);
+    setHistoryIndex(-1);
 
     // Execute command
-    const result = executeCommand(command)
+    const result = executeCommand(command);
 
     // Handle clear command specially
     if (result.output === "CLEAR_TERMINAL") {
@@ -95,7 +104,7 @@ export function TerminalSimulator() {
           type: "output",
           content: "",
         },
-      ])
+      ]);
     } else {
       // Add output to lines
       setLines((prev) => [
@@ -105,58 +114,61 @@ export function TerminalSimulator() {
           content: result.output,
           timestamp: new Date(),
         },
-      ])
+      ]);
     }
 
     // Clear input
-    setCurrentInput("")
-  }
+    setCurrentInput("");
+  };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "ArrowUp") {
-      e.preventDefault()
+      e.preventDefault();
       if (commandHistory.length > 0) {
-        const newIndex = historyIndex === -1 ? commandHistory.length - 1 : Math.max(0, historyIndex - 1)
-        setHistoryIndex(newIndex)
-        setCurrentInput(commandHistory[newIndex])
+        const newIndex =
+          historyIndex === -1
+            ? commandHistory.length - 1
+            : Math.max(0, historyIndex - 1);
+        setHistoryIndex(newIndex);
+        setCurrentInput(commandHistory[newIndex]);
       }
     } else if (e.key === "ArrowDown") {
-      e.preventDefault()
+      e.preventDefault();
       if (historyIndex !== -1) {
-        const newIndex = historyIndex + 1
+        const newIndex = historyIndex + 1;
         if (newIndex >= commandHistory.length) {
-          setHistoryIndex(-1)
-          setCurrentInput("")
+          setHistoryIndex(-1);
+          setCurrentInput("");
         } else {
-          setHistoryIndex(newIndex)
-          setCurrentInput(commandHistory[newIndex])
+          setHistoryIndex(newIndex);
+          setCurrentInput(commandHistory[newIndex]);
         }
       }
     }
-  }
+  };
 
   const handleTerminalClick = () => {
     if (inputRef.current) {
-      inputRef.current.focus()
+      inputRef.current.focus();
     }
-  }
+  };
 
   const getLineColor = (type: string) => {
     switch (type) {
       case "input":
-        return "text-green-400"
+        return "text-green-400";
       case "output":
-        return "text-gray-300"
+        return "text-gray-300";
       case "error":
-        return "text-red-400"
+        return "text-red-400";
       case "success":
-        return "text-green-300"
+        return "text-green-300";
       case "warning":
-        return "text-yellow-400"
+        return "text-yellow-400";
       default:
-        return "text-gray-300"
+        return "text-gray-300";
     }
-  }
+  };
 
   return (
     <div className="min-h-screen bg-gray-900 text-green-400 font-mono p-4">
@@ -169,15 +181,25 @@ export function TerminalSimulator() {
               <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
               <div className="w-3 h-3 bg-green-500 rounded-full"></div>
             </div>
-            <div className="text-gray-400 text-sm">portfolio-terminal - {currentDirectory}</div>
+            <div className="text-gray-400 text-sm">
+              portfolio-terminal - {currentDirectory}
+            </div>
             <div className="w-16"></div>
           </div>
 
           {/* Terminal Content */}
-          <div ref={terminalRef} className="h-96 overflow-y-auto p-4 cursor-text" onClick={handleTerminalClick}>
+          <div
+            ref={terminalRef}
+            className="h-96 overflow-y-auto p-4 cursor-text"
+            onClick={handleTerminalClick}
+          >
             {lines.map((line, index) => (
               <div key={index} className="mb-1">
-                <div className={`whitespace-pre-wrap ${getLineColor(line.type)}`}>{line.content}</div>
+                <div
+                  className={`whitespace-pre-wrap ${getLineColor(line.type)}`}
+                >
+                  {line.content}
+                </div>
               </div>
             ))}
 
@@ -221,7 +243,9 @@ export function TerminalSimulator() {
             </div>
             {terminalCommands.slice(0, 4).map((cmd) => (
               <div key={cmd.command} className="flex">
-                <span className="text-yellow-400 w-24 flex-shrink-0">{cmd.command}</span>
+                <span className="text-yellow-400 w-24 flex-shrink-0">
+                  {cmd.command}
+                </span>
                 <span className="text-gray-400">- {cmd.description}</span>
               </div>
             ))}
@@ -229,5 +253,5 @@ export function TerminalSimulator() {
         </div>
       </div>
     </div>
-  )
+  );
 }

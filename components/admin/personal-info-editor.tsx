@@ -1,26 +1,72 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { Label } from "@/components/ui/label"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { usePortfolioContext } from "@/lib/hooks/use-portfolio-context"
-import { Save } from "lucide-react"
+import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { usePortfolioContext } from "@/lib/hooks/use-portfolio-context";
+import { Save } from "lucide-react";
 
 export function PersonalInfoEditor() {
-  const { data, updatePersonal } = usePortfolioContext()
-  const [formData, setFormData] = useState(data.personal)
+  const { data, updatePersonal } = usePortfolioContext();
+  const [formData, setFormData] = useState(
+    data?.personal || {
+      name: "",
+      title: "",
+      tagline: "",
+      bio: "",
+      location: "",
+      avatar: "",
+      resume_url: "",
+      specializations: [],
+      years_experience: 0,
+      current_status: "available" as const,
+      contact: {
+        email: "",
+        phone: "",
+        website: "",
+        github: "",
+        linkedin: "",
+        twitter: "",
+        blog_url: "",
+      },
+      stats: {
+        projects_completed: 0,
+        blog_posts_written: 0,
+        years_experience: 0,
+        technologies_mastered: 0,
+      },
+    }
+  );
+
+  useEffect(() => {
+    if (data?.personal) {
+      setFormData(data.personal);
+    }
+  }, [data]);
 
   const handleSave = () => {
-	console.log("Handle save form data", formData);
-    updatePersonal(formData)
-  }
+    console.log("Handle save form data", formData);
+    updatePersonal(formData);
+  };
 
   const handleChange = (field: string, value: string) => {
-    setFormData((prev) => ({ ...prev, [field]: value }))
-  }
+    setFormData((prev) => {
+      if (field.includes(".")) {
+        const [parent, child] = field.split(".");
+        return {
+          ...prev,
+          [parent]: {
+            ...(prev[parent as keyof typeof prev] as any),
+            [child]: value,
+          },
+        };
+      }
+      return { ...prev, [field]: value };
+    });
+  };
 
   return (
     <Card>
@@ -66,8 +112,8 @@ export function PersonalInfoEditor() {
             <Input
               id="email"
               type="email"
-              value={formData.email}
-              onChange={(e) => handleChange("email", e.target.value)}
+              value={formData.contact.email}
+              onChange={(e) => handleChange("contact.email", e.target.value)}
               placeholder="your.email@example.com"
             />
           </div>
@@ -87,8 +133,8 @@ export function PersonalInfoEditor() {
             <Label htmlFor="github">GitHub URL</Label>
             <Input
               id="github"
-              value={formData.github}
-              onChange={(e) => handleChange("github", e.target.value)}
+              value={formData.contact.github}
+              onChange={(e) => handleChange("contact.github", e.target.value)}
               placeholder="https://github.com/username"
             />
           </div>
@@ -96,8 +142,8 @@ export function PersonalInfoEditor() {
             <Label htmlFor="linkedin">LinkedIn URL</Label>
             <Input
               id="linkedin"
-              value={formData.linkedin}
-              onChange={(e) => handleChange("linkedin", e.target.value)}
+              value={formData.contact.linkedin}
+              onChange={(e) => handleChange("contact.linkedin", e.target.value)}
               placeholder="https://linkedin.com/in/username"
             />
           </div>
@@ -119,5 +165,5 @@ export function PersonalInfoEditor() {
         </Button>
       </CardContent>
     </Card>
-  )
+  );
 }

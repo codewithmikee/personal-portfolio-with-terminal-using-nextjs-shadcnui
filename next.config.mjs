@@ -1,5 +1,16 @@
+/**
+ * Next.js configuration for portfolio website
+ * Configured for static export and optimized build
+ *
+ * @author Mikiyas Birhanu
+ * @email codewithmikee@gmail.com
+ * @repo https://github.com/codewithmikee/personal-portfolio-with-terminal-using-nextjs-shadcnui.git
+ */
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: "export",
+  trailingSlash: true,
   eslint: {
     ignoreDuringBuilds: true,
   },
@@ -9,6 +20,6 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
-}
+};
 
-export default nextConfig
+export default nextConfig;

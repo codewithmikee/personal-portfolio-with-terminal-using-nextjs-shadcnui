@@ -1,93 +1,144 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { Label } from "@/components/ui/label"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Badge } from "@/components/ui/badge"
-import { usePortfolioContext } from "@/lib/hooks/use-portfolio-context"
-import { Plus, Save, Trash2, X } from "lucide-react"
-import type { Project } from "@/lib/portfolio-data"
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Badge } from "@/components/ui/badge";
+import { usePortfolioContext } from "@/lib/hooks/use-portfolio-context";
+import { Plus, Save, Trash2, X } from "lucide-react";
+import type { Project } from "@/data/schemas/portfolio";
 
 export function ProjectsEditor() {
-  const { data, addProject, updateProject, removeProject } = usePortfolioContext()
-  const [editingProject, setEditingProject] = useState<Project | null>(null)
-  const [isCreating, setIsCreating] = useState(false)
+  const { data, addProject, updateProject, removeProject } =
+    usePortfolioContext();
+
+  if (!data) {
+    return <div>Loading...</div>;
+  }
+
+  const [editingProject, setEditingProject] = useState<Project | null>(null);
+  const [isCreating, setIsCreating] = useState(false);
 
   const emptyProject: Omit<Project, "id"> = {
     title: "",
+    slug: "",
     description: "",
-    longDescription: "",
-    technologies: [],
-    githubUrl: "",
-    liveUrl: "",
-    imageUrl: "",
-    featured: false,
+    detailed_description: "",
     category: "fullstack",
-  }
+    subcategory: "",
+    technologies: {
+      backend: [],
+      frontend: [],
+      database: [],
+      apis: [],
+      tools: [],
+    },
+    status: "completed",
+    timeline: {
+      start_date: "",
+      end_date: "",
+      duration_months: 0,
+    },
+    urls: {
+      live_url: "",
+      github_url: "",
+      case_study_url: "",
+      blog_post_url: "",
+    },
+    media: {
+      thumbnail: "",
+      gallery: [],
+    },
+    my_role: "",
+    key_challenges: [],
+    solutions_implemented: [],
+    featured: false,
+    order: 0,
+  };
 
-  const [formData, setFormData] = useState(emptyProject)
-  const [newTech, setNewTech] = useState("")
+  const [formData, setFormData] = useState(emptyProject);
+  const [newTech, setNewTech] = useState("");
 
   const handleEdit = (project: Project) => {
-    setEditingProject(project)
-    setFormData(project)
-    setIsCreating(false)
-  }
+    setEditingProject(project);
+    setFormData(project);
+    setIsCreating(false);
+  };
 
   const handleCreate = () => {
-    setEditingProject(null)
-    setFormData(emptyProject)
-    setIsCreating(true)
-  }
+    setEditingProject(null);
+    setFormData(emptyProject);
+    setIsCreating(true);
+  };
 
   const handleSave = () => {
     if (isCreating) {
       const newProject: Project = {
         ...formData,
         id: Date.now().toString(),
-      }
-      addProject(newProject)
+      };
+      addProject(newProject);
     } else if (editingProject) {
-      updateProject(editingProject.id, formData)
+      updateProject(editingProject.id, formData);
     }
-    setEditingProject(null)
-    setIsCreating(false)
-    setFormData(emptyProject)
-  }
+    setEditingProject(null);
+    setIsCreating(false);
+    setFormData(emptyProject);
+  };
 
   const handleCancel = () => {
-    setEditingProject(null)
-    setIsCreating(false)
-    setFormData(emptyProject)
-  }
+    setEditingProject(null);
+    setIsCreating(false);
+    setFormData(emptyProject);
+  };
 
   const handleAddTechnology = () => {
-    if (newTech.trim() && !formData.technologies.includes(newTech.trim())) {
-      setFormData((prev) => ({
-        ...prev,
-        technologies: [...prev.technologies, newTech.trim()],
-      }))
-      setNewTech("")
+    if (newTech.trim()) {
+      const allTechs = Object.values(formData.technologies).flat();
+      if (!allTechs.includes(newTech.trim())) {
+        setFormData((prev) => ({
+          ...prev,
+          technologies: {
+            ...prev.technologies,
+            tools: [...prev.technologies.tools, newTech.trim()],
+          },
+        }));
+        setNewTech("");
+      }
     }
-  }
+  };
 
   const handleRemoveTechnology = (tech: string) => {
     setFormData((prev) => ({
       ...prev,
-      technologies: prev.technologies.filter((t) => t !== tech),
-    }))
-  }
+      technologies: {
+        backend: prev.technologies.backend.filter((t) => t !== tech),
+        frontend: prev.technologies.frontend.filter((t) => t !== tech),
+        database: prev.technologies.database.filter((t) => t !== tech),
+        apis: prev.technologies.apis.filter((t) => t !== tech),
+        tools: prev.technologies.tools.filter((t) => t !== tech),
+      },
+    }));
+  };
 
   if (isCreating || editingProject) {
     return (
       <Card>
         <CardHeader>
-          <CardTitle>{isCreating ? "Create New Project" : "Edit Project"}</CardTitle>
+          <CardTitle>
+            {isCreating ? "Create New Project" : "Edit Project"}
+          </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
@@ -96,7 +147,9 @@ export function ProjectsEditor() {
               <Input
                 id="title"
                 value={formData.title}
-                onChange={(e) => setFormData((prev) => ({ ...prev, title: e.target.value }))}
+                onChange={(e) =>
+                  setFormData((prev) => ({ ...prev, title: e.target.value }))
+                }
                 placeholder="Project name"
               />
             </div>
@@ -104,7 +157,12 @@ export function ProjectsEditor() {
               <Label htmlFor="category">Category</Label>
               <Select
                 value={formData.category}
-                onValueChange={(value) => setFormData((prev) => ({ ...prev, category: value as Project["category"] }))}
+                onValueChange={(value) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    category: value as Project["category"],
+                  }))
+                }
               >
                 <SelectTrigger>
                   <SelectValue />
@@ -124,17 +182,27 @@ export function ProjectsEditor() {
             <Input
               id="description"
               value={formData.description}
-              onChange={(e) => setFormData((prev) => ({ ...prev, description: e.target.value }))}
+              onChange={(e) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  description: e.target.value,
+                }))
+              }
               placeholder="Brief project description"
             />
           </div>
 
           <div>
-            <Label htmlFor="longDescription">Detailed Description</Label>
+            <Label htmlFor="detailed_description">Detailed Description</Label>
             <Textarea
-              id="longDescription"
-              value={formData.longDescription}
-              onChange={(e) => setFormData((prev) => ({ ...prev, longDescription: e.target.value }))}
+              id="detailed_description"
+              value={formData.detailed_description}
+              onChange={(e) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  detailed_description: e.target.value,
+                }))
+              }
               placeholder="Detailed project description"
               rows={4}
             />
@@ -154,12 +222,21 @@ export function ProjectsEditor() {
               </Button>
             </div>
             <div className="flex flex-wrap gap-2">
-              {formData.technologies.map((tech) => (
-                <Badge key={tech} variant="secondary" className="flex items-center gap-1">
-                  {tech}
-                  <X className="w-3 h-3 cursor-pointer" onClick={() => handleRemoveTechnology(tech)} />
-                </Badge>
-              ))}
+              {Object.values(formData.technologies)
+                .flat()
+                .map((tech) => (
+                  <Badge
+                    key={tech}
+                    variant="secondary"
+                    className="flex items-center gap-1"
+                  >
+                    {tech}
+                    <X
+                      className="w-3 h-3 cursor-pointer"
+                      onClick={() => handleRemoveTechnology(tech)}
+                    />
+                  </Badge>
+                ))}
             </div>
           </div>
 
@@ -168,8 +245,13 @@ export function ProjectsEditor() {
               <Label htmlFor="githubUrl">GitHub URL</Label>
               <Input
                 id="githubUrl"
-                value={formData.githubUrl}
-                onChange={(e) => setFormData((prev) => ({ ...prev, githubUrl: e.target.value }))}
+                value={formData.urls?.github_url || ""}
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    urls: { ...prev.urls, github_url: e.target.value },
+                  }))
+                }
                 placeholder="https://github.com/..."
               />
             </div>
@@ -177,8 +259,13 @@ export function ProjectsEditor() {
               <Label htmlFor="liveUrl">Live Demo URL</Label>
               <Input
                 id="liveUrl"
-                value={formData.liveUrl}
-                onChange={(e) => setFormData((prev) => ({ ...prev, liveUrl: e.target.value }))}
+                value={formData.urls?.live_url || ""}
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    urls: { ...prev.urls, live_url: e.target.value },
+                  }))
+                }
                 placeholder="https://example.com"
               />
             </div>
@@ -188,8 +275,13 @@ export function ProjectsEditor() {
             <Label htmlFor="imageUrl">Image URL</Label>
             <Input
               id="imageUrl"
-              value={formData.imageUrl}
-              onChange={(e) => setFormData((prev) => ({ ...prev, imageUrl: e.target.value }))}
+              value={formData.media?.thumbnail || ""}
+              onChange={(e) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  media: { ...prev.media, thumbnail: e.target.value },
+                }))
+              }
               placeholder="https://example.com/image.jpg"
             />
           </div>
@@ -198,7 +290,9 @@ export function ProjectsEditor() {
             <Checkbox
               id="featured"
               checked={formData.featured}
-              onCheckedChange={(checked) => setFormData((prev) => ({ ...prev, featured: !!checked }))}
+              onCheckedChange={(checked) =>
+                setFormData((prev) => ({ ...prev, featured: !!checked }))
+              }
             />
             <Label htmlFor="featured">Featured Project</Label>
           </div>
@@ -214,13 +308,15 @@ export function ProjectsEditor() {
           </div>
         </CardContent>
       </Card>
-    )
+    );
   }
 
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center">
-        <h3 className="text-lg font-semibold">Projects ({data.projects.length})</h3>
+        <h3 className="text-lg font-semibold">
+          Projects ({data.projects.projects.length})
+        </h3>
         <Button onClick={handleCreate}>
           <Plus className="w-4 h-4 mr-2" />
           Add Project
@@ -228,35 +324,54 @@ export function ProjectsEditor() {
       </div>
 
       <div className="grid gap-4">
-        {data.projects.map((project) => (
+        {data.projects.projects.map((project) => (
           <Card key={project.id}>
             <CardContent className="p-4">
               <div className="flex justify-between items-start">
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-2">
                     <h4 className="font-semibold">{project.title}</h4>
-                    {project.featured && <Badge variant="secondary">Featured</Badge>}
+                    {project.featured && (
+                      <Badge variant="secondary">Featured</Badge>
+                    )}
                     <Badge variant="outline">{project.category}</Badge>
                   </div>
-                  <p className="text-sm text-muted-foreground mb-2">{project.description}</p>
+                  <p className="text-sm text-muted-foreground mb-2">
+                    {project.description}
+                  </p>
                   <div className="flex flex-wrap gap-1">
-                    {project.technologies.slice(0, 3).map((tech) => (
-                      <Badge key={tech} variant="secondary" className="text-xs">
-                        {tech}
-                      </Badge>
-                    ))}
-                    {project.technologies.length > 3 && (
+                    {Object.values(project.technologies)
+                      .flat()
+                      .slice(0, 3)
+                      .map((tech) => (
+                        <Badge
+                          key={tech}
+                          variant="secondary"
+                          className="text-xs"
+                        >
+                          {tech}
+                        </Badge>
+                      ))}
+                    {Object.values(project.technologies).flat().length > 3 && (
                       <Badge variant="outline" className="text-xs">
-                        +{project.technologies.length - 3}
+                        +{Object.values(project.technologies).flat().length - 3}
                       </Badge>
                     )}
                   </div>
                 </div>
                 <div className="flex gap-2">
-                  <Button variant="outline" size="sm" onClick={() => handleEdit(project)}>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleEdit(project)}
+                  >
                     Edit
                   </Button>
-                  <Button variant="destructive" size="sm" onClick={() => removeProject(project.id)}>
+                  <Button
+                    variant="destructive"
+                    size="sm"
+                    onClick={() => removeProject(project.id)}
+                  >
                     <Trash2 className="w-4 h-4" />
                   </Button>
                 </div>
@@ -266,5 +381,5 @@ export function ProjectsEditor() {
         ))}
       </div>
     </div>
-  )
+  );
 }

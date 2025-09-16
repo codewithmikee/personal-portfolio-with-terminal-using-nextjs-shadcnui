@@ -1,54 +1,87 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Slider } from "@/components/ui/slider"
-import { usePortfolioContext } from "@/lib/hooks/use-portfolio-context"
-import { Plus, Save, Trash2 } from "lucide-react"
-import type { Skill } from "@/lib/portfolio-data"
+import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Slider } from "@/components/ui/slider";
+import { usePortfolioContext } from "@/lib/hooks/use-portfolio-context";
+import { Plus, Save, Trash2 } from "lucide-react";
+import type { Skill } from "@/data/schemas/portfolio";
 
 export function SkillsEditor() {
-  const { data, updateSkills } = usePortfolioContext()
-  const [skills, setSkills] = useState(data.skills)
-  const [newSkill, setNewSkill] = useState<Omit<Skill, "level"> & { level: number[] }>({
+  const { data, updateSkills } = usePortfolioContext();
+
+  if (!data) {
+    return <div>Loading...</div>;
+  }
+
+  const [skills, setSkills] = useState(data.skills.skills);
+  const [newSkill, setNewSkill] = useState<{
+    name: string;
+    category: Skill["category"];
+    level: number[];
+    years_experience: number;
+    last_used: string;
+  }>({
     name: "",
     category: "frontend",
     level: [3],
-  })
+    years_experience: 0,
+    last_used: "",
+  });
+
+  useEffect(() => {
+    if (data?.skills?.skills) {
+      setSkills(data.skills.skills);
+    }
+  }, [data]);
 
   const handleAddSkill = () => {
     if (newSkill.name.trim()) {
       const skill: Skill = {
         name: newSkill.name.trim(),
         category: newSkill.category,
-        level: newSkill.level[0],
-      }
-      setSkills([...skills, skill])
-      setNewSkill({ name: "", category: "frontend", level: [3] })
+        level: newSkill.level[0] as 1 | 2 | 3 | 4 | 5,
+        years_experience: newSkill.years_experience,
+        last_used: newSkill.last_used,
+      };
+      setSkills([...skills, skill]);
+      setNewSkill({
+        name: "",
+        category: "frontend",
+        level: [3],
+        years_experience: 0,
+        last_used: "",
+      });
     }
-  }
+  };
 
   const handleRemoveSkill = (index: number) => {
-    setSkills(skills.filter((_, i) => i !== index))
-  }
+    setSkills(skills.filter((_, i) => i !== index));
+  };
 
   const handleUpdateSkill = (index: number, field: keyof Skill, value: any) => {
-    const updatedSkills = [...skills]
+    const updatedSkills = [...skills];
     if (field === "level" && Array.isArray(value)) {
-      updatedSkills[index] = { ...updatedSkills[index], [field]: value[0] }
+      updatedSkills[index] = { ...updatedSkills[index], [field]: value[0] };
     } else {
-      updatedSkills[index] = { ...updatedSkills[index], [field]: value }
+      updatedSkills[index] = { ...updatedSkills[index], [field]: value };
     }
-    setSkills(updatedSkills)
-  }
+    setSkills(updatedSkills);
+  };
 
   const handleSave = () => {
-    updateSkills(skills)
-  }
+    updateSkills({ ...data.skills, skills });
+  };
 
   const skillCategories = {
     frontend: "Frontend",
@@ -56,7 +89,7 @@ export function SkillsEditor() {
     database: "Database",
     tools: "Tools & DevOps",
     other: "Other",
-  }
+  };
 
   return (
     <div className="space-y-6">
@@ -71,7 +104,9 @@ export function SkillsEditor() {
               <Input
                 id="skillName"
                 value={newSkill.name}
-                onChange={(e) => setNewSkill((prev) => ({ ...prev, name: e.target.value }))}
+                onChange={(e) =>
+                  setNewSkill((prev) => ({ ...prev, name: e.target.value }))
+                }
                 placeholder="e.g., React"
               />
             </div>
@@ -79,7 +114,12 @@ export function SkillsEditor() {
               <Label htmlFor="skillCategory">Category</Label>
               <Select
                 value={newSkill.category}
-                onValueChange={(value) => setNewSkill((prev) => ({ ...prev, category: value as Skill["category"] }))}
+                onValueChange={(value) =>
+                  setNewSkill((prev) => ({
+                    ...prev,
+                    category: value as Skill["category"],
+                  }))
+                }
               >
                 <SelectTrigger>
                   <SelectValue />
@@ -97,7 +137,9 @@ export function SkillsEditor() {
               <Label>Skill Level: {newSkill.level[0]}/5</Label>
               <Slider
                 value={newSkill.level}
-                onValueChange={(value) => setNewSkill((prev) => ({ ...prev, level: value }))}
+                onValueChange={(value) =>
+                  setNewSkill((prev) => ({ ...prev, level: value }))
+                }
                 max={5}
                 min={1}
                 step={1}
@@ -125,21 +167,32 @@ export function SkillsEditor() {
         <CardContent>
           <div className="space-y-4">
             {Object.entries(skillCategories).map(([category, label]) => {
-              const categorySkills = skills.filter((skill) => skill.category === category)
-              if (categorySkills.length === 0) return null
+              const categorySkills = skills.filter(
+                (skill) => skill.category === category
+              );
+              if (categorySkills.length === 0) return null;
 
               return (
                 <div key={category}>
                   <h4 className="font-semibold mb-3">{label}</h4>
                   <div className="space-y-2">
                     {categorySkills.map((skill, skillIndex) => {
-                      const globalIndex = skills.findIndex((s) => s === skill)
+                      const globalIndex = skills.findIndex((s) => s === skill);
                       return (
-                        <div key={globalIndex} className="flex items-center gap-4 p-3 border rounded-lg">
+                        <div
+                          key={globalIndex}
+                          className="flex items-center gap-4 p-3 border rounded-lg"
+                        >
                           <div className="flex-1">
                             <Input
                               value={skill.name}
-                              onChange={(e) => handleUpdateSkill(globalIndex, "name", e.target.value)}
+                              onChange={(e) =>
+                                handleUpdateSkill(
+                                  globalIndex,
+                                  "name",
+                                  e.target.value
+                                )
+                              }
                               className="font-medium"
                             />
                           </div>
@@ -147,45 +200,59 @@ export function SkillsEditor() {
                             <Select
                               value={skill.category}
                               onValueChange={(value) =>
-                                handleUpdateSkill(globalIndex, "category", value as Skill["category"])
+                                handleUpdateSkill(
+                                  globalIndex,
+                                  "category",
+                                  value as Skill["category"]
+                                )
                               }
                             >
                               <SelectTrigger>
                                 <SelectValue />
                               </SelectTrigger>
                               <SelectContent>
-                                {Object.entries(skillCategories).map(([key, label]) => (
-                                  <SelectItem key={key} value={key}>
-                                    {label}
-                                  </SelectItem>
-                                ))}
+                                {Object.entries(skillCategories).map(
+                                  ([key, label]) => (
+                                    <SelectItem key={key} value={key}>
+                                      {label}
+                                    </SelectItem>
+                                  )
+                                )}
                               </SelectContent>
                             </Select>
                           </div>
                           <div className="w-24 text-center">
-                            <span className="text-sm font-medium">{skill.level}/5</span>
+                            <span className="text-sm font-medium">
+                              {skill.level}/5
+                            </span>
                             <Slider
                               value={[skill.level]}
-                              onValueChange={(value) => handleUpdateSkill(globalIndex, "level", value)}
+                              onValueChange={(value) =>
+                                handleUpdateSkill(globalIndex, "level", value)
+                              }
                               max={5}
                               min={1}
                               step={1}
                               className="mt-1"
                             />
                           </div>
-                          <Button variant="destructive" size="sm" onClick={() => handleRemoveSkill(globalIndex)}>
+                          <Button
+                            variant="destructive"
+                            size="sm"
+                            onClick={() => handleRemoveSkill(globalIndex)}
+                          >
                             <Trash2 className="w-4 h-4" />
                           </Button>
                         </div>
-                      )
+                      );
                     })}
                   </div>
                 </div>
-              )
+              );
             })}
           </div>
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }

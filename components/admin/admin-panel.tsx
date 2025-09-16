@@ -1,19 +1,37 @@
-"use client"
-import { Button } from "@/components/ui/button"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Settings, User, Briefcase, Code, Award, X } from "lucide-react"
-import { PersonalInfoEditor } from "@/components/admin/personal-info-editor"
-import { ProjectsEditor } from "@/components/admin/projects-editor"
-import { ExperienceEditor } from "@/components/admin/experience-editor"
-import { SkillsEditor } from "@/components/admin/skills-editor"
+/**
+ * Admin panel component for portfolio management
+ * Provides interface for editing all portfolio content sections
+ *
+ * @author Mikiyas Birhanu
+ * @email codewithmikee@gmail.com
+ * @repo https://github.com/codewithmikee/personal-portfolio-with-terminal-using-nextjs-shadcnui.git
+ */
+
+"use client";
+import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Settings,
+  User,
+  Briefcase,
+  Code,
+  Award,
+  X,
+  Database,
+} from "lucide-react";
+import { PersonalInfoEditor } from "@/components/admin/personal-info-editor";
+import { ProjectsEditor } from "@/components/admin/projects-editor";
+import { ExperienceEditor } from "@/components/admin/experience-editor";
+import { SkillsEditor } from "@/components/admin/skills-editor";
+import { DataManager } from "@/components/admin/data-manager";
 
 interface AdminPanelProps {
-  isOpen: boolean
-  onClose: () => void
+  isOpen: boolean;
+  onClose: () => void;
 }
 
 export function AdminPanel({ isOpen, onClose }: AdminPanelProps) {
-  if (!isOpen) return null
+  if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 z-50 bg-background/80 backdrop-blur-sm">
@@ -30,7 +48,7 @@ export function AdminPanel({ isOpen, onClose }: AdminPanelProps) {
 
         <div className="p-4 h-[calc(100vh-8rem)] overflow-auto">
           <Tabs defaultValue="personal" className="w-full">
-            <TabsList className="grid w-full grid-cols-4">
+            <TabsList className="grid w-full grid-cols-5">
               <TabsTrigger value="personal" className="flex items-center gap-2">
                 <User className="w-4 h-4" />
                 Personal
@@ -39,13 +57,20 @@ export function AdminPanel({ isOpen, onClose }: AdminPanelProps) {
                 <Briefcase className="w-4 h-4" />
                 Projects
               </TabsTrigger>
-              <TabsTrigger value="experience" className="flex items-center gap-2">
+              <TabsTrigger
+                value="experience"
+                className="flex items-center gap-2"
+              >
                 <Award className="w-4 h-4" />
                 Experience
               </TabsTrigger>
               <TabsTrigger value="skills" className="flex items-center gap-2">
                 <Code className="w-4 h-4" />
                 Skills
+              </TabsTrigger>
+              <TabsTrigger value="data" className="flex items-center gap-2">
+                <Database className="w-4 h-4" />
+                Data
               </TabsTrigger>
             </TabsList>
 
@@ -64,9 +89,13 @@ export function AdminPanel({ isOpen, onClose }: AdminPanelProps) {
             <TabsContent value="skills" className="mt-6">
               <SkillsEditor />
             </TabsContent>
+
+            <TabsContent value="data" className="mt-6">
+              <DataManager />
+            </TabsContent>
           </Tabs>
         </div>
       </div>
     </div>
-  )
+  );
 }

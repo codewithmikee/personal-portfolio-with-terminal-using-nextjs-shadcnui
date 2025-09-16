@@ -1,18 +1,48 @@
-"use client"
+"use client";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { usePortfolioContext } from "@/lib/hooks/use-portfolio-context"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { usePortfolioContext } from "@/lib/hooks/use-portfolio-context";
 
 export function Experience() {
-  const { data } = usePortfolioContext()
-  const { experience } = data
+  const { data, isLoading } = usePortfolioContext();
+
+  if (isLoading || !data) {
+    return (
+      <section id="experience" className="py-20 bg-muted/30">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto">
+            <div className="animate-pulse">
+              <div className="h-12 bg-muted rounded mb-12 w-1/3 mx-auto"></div>
+              <div className="space-y-6">
+                {[1, 2].map((i) => (
+                  <div key={i} className="border rounded-lg p-6">
+                    <div className="h-6 bg-muted rounded mb-2"></div>
+                    <div className="h-4 bg-muted rounded mb-4 w-1/2"></div>
+                    <div className="h-4 bg-muted rounded mb-4"></div>
+                    <div className="flex gap-2">
+                      <div className="h-6 bg-muted rounded w-16"></div>
+                      <div className="h-6 bg-muted rounded w-20"></div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  const { experience } = data;
 
   return (
     <section id="experience" className="py-20 bg-muted/30">
       <div className="container mx-auto px-4">
         <div className="max-w-4xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">Work Experience</h2>
+          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
+            Work Experience
+          </h2>
 
           <div className="space-y-6">
             {experience.map((exp, index) => (
@@ -28,16 +58,18 @@ export function Experience() {
                       <p className="text-primary font-medium">{exp.company}</p>
                     </div>
                     <Badge variant="outline" className="w-fit">
-                      {exp.duration}
+                      {exp.timeline?.duration || "Duration not specified"}
                     </Badge>
                   </div>
                 </CardHeader>
 
                 <CardContent>
-                  <p className="text-muted-foreground mb-4 text-pretty">{exp.description}</p>
+                  <p className="text-muted-foreground mb-4 text-pretty">
+                    {exp.overview}
+                  </p>
 
                   <div className="flex flex-wrap gap-2">
-                    {exp.technologies.map((tech) => (
+                    {exp.technologies_used?.map((tech) => (
                       <Badge key={tech} variant="secondary" className="text-xs">
                         {tech}
                       </Badge>
@@ -50,5 +82,5 @@ export function Experience() {
         </div>
       </div>
     </section>
-  )
+  );
 }
