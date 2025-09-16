@@ -23,24 +23,28 @@ This document provides detailed information for developers working on the Ultima
 ### In Progress Features
 
 #### 1. AI Agent Integration
+
 - **Status**: Planning
 - **Description**: Interactive AI assistant for portfolio navigation and Q&A
 - **Tech Stack**: OpenAI API, React hooks, TypeScript
 - **Files**: `components/ai-agent/`, `lib/ai/`
 
 #### 2. CV/PDF Export
+
 - **Status**: Planning
 - **Description**: Generate downloadable CV and PDF versions of the portfolio
 - **Tech Stack**: Puppeteer, jsPDF, React components
 - **Files**: `lib/export/`, `components/export/`
 
 #### 3. Contact Form
+
 - **Status**: Planning
 - **Description**: Interactive contact form with backend integration and email notifications
 - **Tech Stack**: Next.js API routes, Nodemailer, Prisma
 - **Files**: `app/api/contact/`, `components/contact-form/`
 
 #### 4. Data Source Enhancement
+
 - **Status**: Planning
 - **Description**: More comprehensive portfolio data structure and validation
 - **Tech Stack**: Zod, Prisma, TypeScript
@@ -49,31 +53,37 @@ This document provides detailed information for developers working on the Ultima
 ### Planned Features
 
 #### 1. Multi-language Support
+
 - **Priority**: Medium
 - **Description**: Internationalization for global reach
 - **Tech Stack**: next-intl, i18n
 
 #### 2. Analytics Dashboard
+
 - **Priority**: Low
 - **Description**: Visitor insights and portfolio performance metrics
 - **Tech Stack**: Google Analytics, Chart.js
 
 #### 3. Blog Integration
+
 - **Priority**: Medium
 - **Description**: Content management system for blog posts
 - **Tech Stack**: MDX, Prisma, React
 
 #### 4. Project Demos
+
 - **Priority**: High
 - **Description**: Interactive project demonstrations and live previews
 - **Tech Stack**: iframe, Web Components
 
 #### 5. Testimonials
+
 - **Priority**: Medium
 - **Description**: Client and colleague testimonials section
 - **Tech Stack**: Prisma, React components
 
 #### 6. Advanced Terminal Commands
+
 - **Priority**: Low
 - **Description**: More interactive terminal features and games
 - **Tech Stack**: React, TypeScript
@@ -81,6 +91,7 @@ This document provides detailed information for developers working on the Ultima
 ## 🏗️ Architecture Overview
 
 ### Frontend
+
 - **Framework**: Next.js 14 with App Router
 - **Language**: TypeScript
 - **Styling**: Tailwind CSS
@@ -89,12 +100,14 @@ This document provides detailed information for developers working on the Ultima
 - **Icons**: Lucide React
 
 ### Backend
+
 - **API**: Next.js API routes
 - **Database**: SQLite with Prisma ORM
 - **Authentication**: NextAuth.js (planned)
 - **File Storage**: Local filesystem (planned: AWS S3)
 
 ### Development
+
 - **Package Manager**: pnpm
 - **Linting**: ESLint + Prettier
 - **Type Checking**: TypeScript
@@ -126,6 +139,7 @@ This document provides detailed information for developers working on the Ultima
 ## 🔧 Development Workflow
 
 ### 1. Setup
+
 ```bash
 # Clone repository
 git clone <repository-url>
@@ -144,6 +158,7 @@ pnpm dev
 ```
 
 ### 2. Feature Development
+
 1. Create feature branch: `git checkout -b feature/feature-name`
 2. Implement changes
 3. Test thoroughly
@@ -151,6 +166,7 @@ pnpm dev
 5. Create pull request
 
 ### 3. Code Standards
+
 - Use TypeScript for all new code
 - Follow existing naming conventions
 - Add JSDoc comments for functions
@@ -160,10 +176,12 @@ pnpm dev
 ## 🧪 Testing
 
 ### Current Testing
+
 - Type checking with TypeScript
 - Build verification with Next.js
 
 ### Planned Testing
+
 - Unit tests with Jest
 - Component tests with React Testing Library
 - E2E tests with Playwright
@@ -172,12 +190,14 @@ pnpm dev
 ## 📚 Resources
 
 ### Documentation
+
 - [Next.js Documentation](https://nextjs.org/docs)
 - [Prisma Documentation](https://www.prisma.io/docs)
 - [Tailwind CSS Documentation](https://tailwindcss.com/docs)
 - [Radix UI Documentation](https://www.radix-ui.com/docs)
 
 ### Tools
+
 - [Cursor Editor](https://cursor.sh/)
 - [21dev Components](https://21st.dev/)
 - [Docker Documentation](https://docs.docker.com/)
