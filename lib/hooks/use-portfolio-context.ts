@@ -12,31 +12,31 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { useEffect } from "react";
-import type { PortfolioData } from "@/data/schemas/portfolio";
+import type { EnhancedPortfolio } from "@/data/schemas/portfolio";
 import {
-  loadPortfolioData,
-  loadPortfolioDataFromStatic,
+  loadEnhancedPortfolioData,
+  loadEnhancedPortfolioDataFromStatic,
 } from "@/lib/data-loader";
 
 interface PortfolioState {
-  data: PortfolioData | null;
+  data: EnhancedPortfolio | null;
   isLoading: boolean;
   error: string | null;
-  updatePersonal: (personal: Partial<PortfolioData["personal"]>) => void;
-  addProject: (project: PortfolioData["projects"]["projects"][0]) => void;
+  updateProfile: (profile: Partial<EnhancedPortfolio["profile"]>) => void;
+  addProject: (project: EnhancedPortfolio["projects"][0]) => void;
   updateProject: (
-    id: string,
-    updates: Partial<PortfolioData["projects"]["projects"][0]>
+    index: number,
+    updates: Partial<EnhancedPortfolio["projects"][0]>
   ) => void;
-  removeProject: (id: string) => void;
-  addExperience: (experience: PortfolioData["experience"][0]) => void;
+  removeProject: (index: number) => void;
+  addExperience: (experience: EnhancedPortfolio["experience"][0]) => void;
   updateExperience: (
-    id: string,
-    updates: Partial<PortfolioData["experience"][0]>
+    index: number,
+    updates: Partial<EnhancedPortfolio["experience"][0]>
   ) => void;
-  removeExperience: (id: string) => void;
-  updateSkills: (skills: PortfolioData["skills"]) => void;
-  updateData: (newData: PortfolioData) => void;
+  removeExperience: (index: number) => void;
+  updateTechStacks: (techStacks: EnhancedPortfolio["techStacks"]) => void;
+  updateData: (newData: EnhancedPortfolio) => void;
   resetToDefault: () => void;
   loadData: () => Promise<void>;
 }
@@ -51,7 +51,7 @@ export const usePortfolioContext = create<PortfolioState>()(
       loadData: async () => {
         set({ isLoading: true, error: null });
         try {
-          const data = await loadPortfolioData();
+          const data = await loadEnhancedPortfolioData();
           set({ data, isLoading: false });
         } catch (error) {
           set({
@@ -62,13 +62,13 @@ export const usePortfolioContext = create<PortfolioState>()(
         }
       },
 
-      updatePersonal: (personal) =>
+      updateProfile: (profile) =>
         set((state) => {
           if (!state.data) return state;
           return {
             data: {
               ...state.data,
-              personal: { ...state.data.personal, ...personal },
+              profile: { ...state.data.profile, ...profile },
             },
           };
         }),
@@ -79,42 +79,32 @@ export const usePortfolioContext = create<PortfolioState>()(
           return {
             data: {
               ...state.data,
-              projects: {
-                ...state.data.projects,
-                projects: [...state.data.projects.projects, project],
-              },
+              projects: [...state.data.projects, project],
             },
           };
         }),
 
-      updateProject: (id, updates) =>
+      updateProject: (index, updates) =>
         set((state) => {
           if (!state.data) return state;
+          const newProjects = [...state.data.projects];
+          newProjects[index] = { ...newProjects[index], ...updates };
           return {
             data: {
               ...state.data,
-              projects: {
-                ...state.data.projects,
-                projects: state.data.projects.projects.map((project) =>
-                  project.id === id ? { ...project, ...updates } : project
-                ),
-              },
+              projects: newProjects,
             },
           };
         }),
 
-      removeProject: (id) =>
+      removeProject: (index) =>
         set((state) => {
           if (!state.data) return state;
+          const newProjects = state.data.projects.filter((_, i) => i !== index);
           return {
             data: {
               ...state.data,
-              projects: {
-                ...state.data.projects,
-                projects: state.data.projects.projects.filter(
-                  (project) => project.id !== id
-                ),
-              },
+              projects: newProjects,
             },
           };
         }),
@@ -130,61 +120,64 @@ export const usePortfolioContext = create<PortfolioState>()(
           };
         }),
 
-      updateExperience: (id, updates) =>
+      updateExperience: (index, updates) =>
         set((state) => {
           if (!state.data) return state;
+          const newExperience = [...state.data.experience];
+          newExperience[index] = { ...newExperience[index], ...updates };
           return {
             data: {
               ...state.data,
-              experience: state.data.experience.map((exp) =>
-                exp.id === id ? { ...exp, ...updates } : exp
-              ),
+              experience: newExperience,
             },
           };
         }),
 
-      removeExperience: (id) =>
+      removeExperience: (index) =>
         set((state) => {
           if (!state.data) return state;
+          const newExperience = state.data.experience.filter(
+            (_, i) => i !== index
+          );
           return {
             data: {
               ...state.data,
-              experience: state.data.experience.filter((exp) => exp.id !== id),
+              experience: newExperience,
             },
           };
         }),
 
-      updateSkills: (skills) =>
+      updateTechStacks: (techStacks) =>
         set((state) => {
           if (!state.data) return state;
           return {
             data: {
               ...state.data,
-              skills,
+              techStacks,
             },
           };
         }),
 
       updateData: (newData) => set({ data: newData }),
 
-      resetToDefault: async () => {
-        set({ isLoading: true, error: null });
-        try {
-          const data = await loadPortfolioData();
-          set({ data, isLoading: false });
-        } catch (error) {
-          set({
-            error:
-              error instanceof Error ? error.message : "Failed to reset data",
-            isLoading: false,
-          });
-        }
-      },
+      resetToDefault: () => set({ data: null }),
     }),
     {
-      name: "portfolio-data",
-      // Only persist data, not loading states
+      name: "portfolio-storage",
       partialize: (state) => ({ data: state.data }),
     }
   )
 );
+
+// Hook to use portfolio context with auto-loading
+export function usePortfolioData() {
+  const { data, isLoading, error, loadData } = usePortfolioContext();
+
+  useEffect(() => {
+    if (!data && !isLoading) {
+      loadData();
+    }
+  }, [data, isLoading, loadData]);
+
+  return { data, isLoading, error };
+}

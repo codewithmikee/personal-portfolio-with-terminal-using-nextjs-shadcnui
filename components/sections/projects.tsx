@@ -4,13 +4,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Github, ExternalLink } from "lucide-react";
-import { usePortfolioContext } from "@/lib/hooks/use-portfolio-context";
+import { useEnhancedPortfolioData } from "@/lib/hooks/use-portfolio-data";
 import Image from "next/image";
 
 export function Projects() {
-  const { data, isLoading } = usePortfolioContext();
+  const { data, loading } = useEnhancedPortfolioData();
 
-  if (isLoading || !data) {
+  if (loading || !data) {
     return (
       <section id="projects" className="py-20">
         <div className="container mx-auto px-4">
@@ -40,9 +40,7 @@ export function Projects() {
   }
 
   const { projects } = data;
-  const featuredProjects = projects.projects.filter(
-    (project) => project.featured
-  );
+  const featuredProjects = projects; // All projects are featured in enhanced structure
 
   return (
     <section id="projects" className="py-20">
@@ -53,17 +51,14 @@ export function Projects() {
           </h2>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-            {featuredProjects.map((project) => (
+            {featuredProjects.map((project, index) => (
               <Card
-                key={project.id}
+                key={index}
                 className="group hover:shadow-lg transition-shadow"
               >
                 <div className="relative overflow-hidden rounded-t-lg">
                   <Image
-                    src={
-                      project.media?.thumbnail ||
-                      `/placeholder.svg?height=250&width=400&query=${project.title} project interface`
-                    }
+                    src={`/placeholder.svg?height=250&width=400&query=${project.title} project interface`}
                     alt={project.title}
                     width={400}
                     height={250}
@@ -80,52 +75,41 @@ export function Projects() {
 
                 <CardContent>
                   <div className="flex flex-wrap gap-2 mb-4">
-                    {Object.values(project.technologies)
-                      .flat()
+                    {project.features
+                      .flatMap((feature) => feature.techStacks)
                       .slice(0, 3)
-                      .map((tech) => (
+                      .map((tech, techIndex) => (
                         <Badge
-                          key={tech}
+                          key={techIndex}
                           variant="secondary"
                           className="text-xs"
                         >
-                          {tech}
+                          {tech.title}
                         </Badge>
                       ))}
-                    {Object.values(project.technologies).flat().length > 3 && (
+                    {project.features.flatMap((feature) => feature.techStacks)
+                      .length > 3 && (
                       <Badge variant="outline" className="text-xs">
-                        +{Object.values(project.technologies).flat().length - 3}{" "}
+                        +
+                        {project.features.flatMap(
+                          (feature) => feature.techStacks
+                        ).length - 3}{" "}
                         more
                       </Badge>
                     )}
                   </div>
 
                   <div className="flex gap-2">
-                    {project.urls?.github_url && (
-                      <Button variant="outline" size="sm" asChild>
-                        <a
-                          href={project.urls.github_url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          <Github className="w-4 h-4 mr-2" />
-                          Code
-                        </a>
-                      </Button>
-                    )}
-
-                    {project.urls?.live_url && (
-                      <Button size="sm" asChild>
-                        <a
-                          href={project.urls.live_url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          <ExternalLink className="w-4 h-4 mr-2" />
-                          Live Demo
-                        </a>
-                      </Button>
-                    )}
+                    <Button size="sm" asChild>
+                      <a
+                        href={project.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <ExternalLink className="w-4 h-4 mr-2" />
+                        View Project
+                      </a>
+                    </Button>
                   </div>
                 </CardContent>
               </Card>
@@ -134,7 +118,7 @@ export function Projects() {
 
           <div className="text-center">
             <Button variant="outline" size="lg">
-              View All Projects ({projects.projects.length})
+              View All Projects ({projects.length})
             </Button>
           </div>
         </div>

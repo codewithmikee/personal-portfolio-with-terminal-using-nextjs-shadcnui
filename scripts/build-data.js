@@ -18,48 +18,39 @@ const path = require("path");
  */
 
 const DATA_DIR = path.join(__dirname, "../data");
-const DEV_DATA_PATH = path.join(DATA_DIR, "development/portfolio.json");
-const PROD_DATA_PATH = path.join(DATA_DIR, "production/portfolio.json");
+const PORTFOLIO_DATA_PATH = path.join(DATA_DIR, "portfolio/portfolio.json");
+const PUBLIC_DATA_PATH = path.join(__dirname, "../public/data/portfolio.json");
 
 async function buildPortfolioData() {
   console.log("🏗️  Building portfolio data...");
 
   try {
-    // Ensure production directory exists
-    const prodDir = path.dirname(PROD_DATA_PATH);
-    if (!fs.existsSync(prodDir)) {
-      fs.mkdirSync(prodDir, { recursive: true });
+    // Ensure public data directory exists
+    const publicDataDir = path.dirname(PUBLIC_DATA_PATH);
+    if (!fs.existsSync(publicDataDir)) {
+      fs.mkdirSync(publicDataDir, { recursive: true });
     }
 
-    // Load development data
-    const developmentData = await loadDevelopmentData();
+    // Load portfolio data
+    const portfolioData = await loadPortfolioData();
 
     // Validate data structure
-    const isValid = await validateData(developmentData);
+    const isValid = await validateData(portfolioData);
     if (!isValid) {
       throw new Error("Data validation failed");
     }
 
     // Optimize for production
-    const optimizedData = optimizeForProduction(developmentData);
+    const optimizedData = optimizeForProduction(portfolioData);
 
-    // Write production data
-    fs.writeFileSync(PROD_DATA_PATH, JSON.stringify(optimizedData, null, 2));
-
-    // Copy to public directory for static export
-    const publicDataDir = path.join(__dirname, "../public/data");
-    if (!fs.existsSync(publicDataDir)) {
-      fs.mkdirSync(publicDataDir, { recursive: true });
-    }
-
-    const publicDataPath = path.join(publicDataDir, "portfolio.json");
-    fs.copyFileSync(PROD_DATA_PATH, publicDataPath);
+    // Write to public directory for static export
+    fs.writeFileSync(PUBLIC_DATA_PATH, JSON.stringify(optimizedData, null, 2));
     console.log("📁 Copied to public directory for static export");
 
     // Generate stats
-    const stats = generateStats(developmentData, optimizedData);
-    console.log("✅ Portfolio data built successfully");
-    console.log(`📁 Output: ${PROD_DATA_PATH}`);
+    const stats = generateStats(portfolioData, optimizedData);
+    console.log("✅ Enhanced portfolio data built successfully");
+    console.log(`📁 Output: ${PUBLIC_DATA_PATH}`);
     console.log(`📊 Stats:`, stats);
   } catch (error) {
     console.error("❌ Build failed:", error.message);
@@ -67,25 +58,28 @@ async function buildPortfolioData() {
   }
 }
 
-async function loadDevelopmentData() {
+async function loadPortfolioData() {
   try {
-    const data = JSON.parse(fs.readFileSync(DEV_DATA_PATH, "utf8"));
-    console.log("📖 Loaded development data");
+    const data = JSON.parse(fs.readFileSync(PORTFOLIO_DATA_PATH, "utf8"));
+    console.log("📖 Loaded portfolio data");
     return data;
   } catch (error) {
-    throw new Error(`Failed to load development data: ${error.message}`);
+    throw new Error(`Failed to load portfolio data: ${error.message}`);
   }
 }
 
 async function validateData(data) {
-  console.log("🔍 Validating data structure...");
+  console.log("🔍 Validating portfolio data structure...");
 
   const requiredFields = [
-    "metadata",
-    "personal",
+    "profile",
+    "techStacks",
     "projects",
     "experience",
     "skills",
+    "tools",
+    "blogs",
+    "contacts",
   ];
   const missingFields = requiredFields.filter((field) => !data[field]);
 
@@ -94,14 +88,14 @@ async function validateData(data) {
     return false;
   }
 
-  // Validate personal data
-  if (!data.personal.name || !data.personal.title) {
-    console.error("❌ Invalid personal data");
+  // Validate profile data
+  if (!data.profile.full_name || !data.profile.email) {
+    console.error("❌ Invalid profile data");
     return false;
   }
 
   // Validate projects
-  if (!Array.isArray(data.projects.projects)) {
+  if (!Array.isArray(data.projects)) {
     console.error("❌ Projects must be an array");
     return false;
   }
@@ -112,44 +106,48 @@ async function validateData(data) {
     return false;
   }
 
+  // Validate tech stacks
+  if (!Array.isArray(data.techStacks)) {
+    console.error("❌ Tech stacks must be an array");
+    return false;
+  }
+
   // Validate skills
-  if (!Array.isArray(data.skills.skills)) {
+  if (!Array.isArray(data.skills)) {
     console.error("❌ Skills must be an array");
     return false;
   }
 
-  console.log("✅ Data validation passed");
+  console.log("✅ Enhanced data validation passed");
   return true;
 }
 
 function optimizeForProduction(data) {
-  console.log("⚡ Optimizing data for production...");
+  console.log("⚡ Optimizing portfolio data for production...");
 
   return {
     ...data,
-    metadata: {
-      ...data.metadata,
-      build_date: new Date().toISOString(),
-      environment: "production",
-      optimized: true,
-      version: data.metadata.version || "1.0.0",
-    },
-    // Remove any development-only fields
     // Add any production-specific optimizations
+    // The enhanced data structure is already optimized
   };
 }
 
-function generateStats(devData, prodData) {
-  const devSize = Buffer.byteLength(JSON.stringify(devData), "utf8");
+function generateStats(portfolioData, prodData) {
+  const portfolioSize = Buffer.byteLength(
+    JSON.stringify(portfolioData),
+    "utf8"
+  );
   const prodSize = Buffer.byteLength(JSON.stringify(prodData), "utf8");
 
   return {
-    "Dev Size": `${(devSize / 1024).toFixed(2)} KB`,
-    "Prod Size": `${(prodSize / 1024).toFixed(2)} KB`,
-    Projects: devData.projects?.projects?.length || 0,
-    Experience: devData.experience?.length || 0,
-    Skills: devData.skills?.skills?.length || 0,
-    Compression: `${(((devSize - prodSize) / devSize) * 100).toFixed(1)}%`,
+    "Portfolio Size": `${(portfolioSize / 1024).toFixed(2)} KB`,
+    "Production Size": `${(prodSize / 1024).toFixed(2)} KB`,
+    Projects: portfolioData.projects?.length || 0,
+    Experience: portfolioData.experience?.length || 0,
+    TechStacks: portfolioData.techStacks?.length || 0,
+    Skills: portfolioData.skills?.length || 0,
+    Tools: portfolioData.tools?.length || 0,
+    Blogs: portfolioData.blogs?.length || 0,
   };
 }
 

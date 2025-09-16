@@ -2,12 +2,12 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { usePortfolioContext } from "@/lib/hooks/use-portfolio-context";
+import { useEnhancedPortfolioData } from "@/lib/hooks/use-portfolio-data";
 
 export function Skills() {
-  const { data, isLoading } = usePortfolioContext();
+  const { data, loading } = useEnhancedPortfolioData();
 
-  if (isLoading || !data) {
+  if (loading || !data) {
     return (
       <section id="skills" className="py-20">
         <div className="container mx-auto px-4">
@@ -36,20 +36,20 @@ export function Skills() {
     );
   }
 
-  const { skills } = data;
+  const { techStacks, skills, tools } = data;
 
   const skillCategories = {
-    frontend: skills.skills.filter((skill) => skill.category === "frontend"),
-    backend: skills.skills.filter((skill) => skill.category === "backend"),
-    database: skills.skills.filter((skill) => skill.category === "database"),
-    tools: skills.skills.filter((skill) => skill.category === "tools"),
+    frontend: techStacks.filter((tech) => tech.type === "Frontend"),
+    backend: techStacks.filter((tech) => tech.type === "Backend"),
+    mobile: techStacks.filter((tech) => tech.type === "Mobile"),
+    fullstack: techStacks.filter((tech) => tech.type === "Fullstack"),
   };
 
   const categoryTitles = {
     frontend: "Frontend",
     backend: "Backend",
-    database: "Database",
-    tools: "Tools & DevOps",
+    mobile: "Mobile",
+    fullstack: "Full Stack",
   };
 
   return (
@@ -71,19 +71,29 @@ export function Skills() {
                   </CardHeader>
 
                   <CardContent className="space-y-4">
-                    {categorySkills.map((skill) => (
-                      <div key={skill.name}>
-                        <div className="flex justify-between items-center mb-2">
-                          <span className="text-sm font-medium">
-                            {skill.name}
-                          </span>
-                          <span className="text-xs text-muted-foreground">
-                            {skill.level}/5
-                          </span>
+                    {categorySkills.map((tech) => {
+                      const levelValue =
+                        tech.level === "Expert"
+                          ? 100
+                          : tech.level === "Advanced"
+                          ? 80
+                          : tech.level === "Intermediate"
+                          ? 60
+                          : 40;
+                      return (
+                        <div key={tech.key}>
+                          <div className="flex justify-between items-center mb-2">
+                            <span className="text-sm font-medium">
+                              {tech.title}
+                            </span>
+                            <span className="text-xs text-muted-foreground">
+                              {tech.level}
+                            </span>
+                          </div>
+                          <Progress value={levelValue} className="h-2" />
                         </div>
-                        <Progress value={skill.level * 20} className="h-2" />
-                      </div>
-                    ))}
+                      );
+                    })}
                   </CardContent>
                 </Card>
               )

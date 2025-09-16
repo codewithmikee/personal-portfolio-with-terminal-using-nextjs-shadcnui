@@ -11,13 +11,13 @@
 
 import { Button } from "@/components/ui/button";
 import { Github, Linkedin, Mail, ArrowDown } from "lucide-react";
-import { usePortfolioContext } from "@/lib/hooks/use-portfolio-context";
+import { useEnhancedPortfolioData } from "@/lib/hooks/use-portfolio-data";
 import Image from "next/image";
 
 export function Hero() {
-  const { data, isLoading } = usePortfolioContext();
+  const { data, loading } = useEnhancedPortfolioData();
 
-  if (isLoading || !data) {
+  if (loading || !data) {
     return (
       <section
         id="hero"
@@ -37,7 +37,7 @@ export function Hero() {
     );
   }
 
-  const { personal } = data;
+  const { profile } = data;
 
   const scrollToAbout = () => {
     const aboutSection = document.getElementById("about");
@@ -63,10 +63,10 @@ export function Hero() {
           <div className="mb-8">
             <Image
               src={
-                personal.avatar ||
+                profile.profile_picture ||
                 "/placeholder.svg?height=150&width=150&query=professional developer avatar"
               }
-              alt={personal.name}
+              alt={profile.full_name}
               width={150}
               height={150}
               className="rounded-full mx-auto mb-6 border-4 border-primary/20"
@@ -74,15 +74,15 @@ export function Hero() {
           </div>
 
           <h1 className="text-4xl md:text-6xl font-bold mb-6 text-balance">
-            Hi, I'm <span className="text-primary">{personal.name}</span>
+            Hi, I'm <span className="text-primary">{profile.full_name}</span>
           </h1>
 
           <h2 className="text-xl md:text-2xl text-muted-foreground mb-8 text-balance">
-            {personal.title}
+            Full Stack Developer
           </h2>
 
           <p className="text-lg text-muted-foreground mb-12 max-w-2xl mx-auto text-pretty">
-            {personal.bio}
+            {profile.description}
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
@@ -98,7 +98,10 @@ export function Hero() {
             <div className="flex items-center gap-2">
               <Button variant="outline" size="lg" asChild>
                 <a
-                  href={personal.contact.github}
+                  href={
+                    profile.contacts.find((c) => c.name === "GitHub")?.link ||
+                    "#"
+                  }
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -109,7 +112,10 @@ export function Hero() {
 
               <Button variant="outline" size="lg" asChild>
                 <a
-                  href={personal.contact.linkedin}
+                  href={
+                    profile.contacts.find((c) => c.name === "LinkedIn")?.link ||
+                    "#"
+                  }
                   target="_blank"
                   rel="noopener noreferrer"
                 >

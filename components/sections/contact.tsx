@@ -5,12 +5,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Mail, Github, Linkedin, MapPin } from "lucide-react";
-import { usePortfolioContext } from "@/lib/hooks/use-portfolio-context";
+import { useEnhancedPortfolioData } from "@/lib/hooks/use-portfolio-data";
 
 export function Contact() {
-  const { data, isLoading } = usePortfolioContext();
+  const { data, loading } = useEnhancedPortfolioData();
 
-  if (isLoading || !data) {
+  if (loading || !data) {
     return (
       <section id="contact" className="py-20 bg-muted/30">
         <div className="container mx-auto px-4">
@@ -40,7 +40,7 @@ export function Contact() {
     );
   }
 
-  const { personal } = data;
+  const { profile } = data;
 
   return (
     <section id="contact" className="py-20 bg-muted/30">
@@ -65,40 +65,36 @@ export function Contact() {
                 <div className="flex items-center">
                   <Mail className="w-5 h-5 mr-3 text-primary" />
                   <a
-                    href={`mailto:${personal.contact.email}`}
+                    href={`mailto:${profile.email}`}
                     className="hover:text-primary transition-colors"
                   >
-                    {personal.contact.email}
+                    {profile.email}
                   </a>
                 </div>
 
                 <div className="flex items-center">
                   <MapPin className="w-5 h-5 mr-3 text-primary" />
-                  <span>{personal.location}</span>
+                  <span>{profile.address}</span>
                 </div>
 
                 <div className="flex items-center gap-4 pt-4">
-                  <Button variant="outline" size="sm" asChild>
-                    <a
-                      href={personal.contact.github}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <Github className="w-4 h-4 mr-2" />
-                      GitHub
-                    </a>
-                  </Button>
-
-                  <Button variant="outline" size="sm" asChild>
-                    <a
-                      href={personal.contact.linkedin}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <Linkedin className="w-4 h-4 mr-2" />
-                      LinkedIn
-                    </a>
-                  </Button>
+                  {profile.contacts.map((contact, index) => (
+                    <Button key={index} variant="outline" size="sm" asChild>
+                      <a
+                        href={contact.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {contact.name === "GitHub" && (
+                          <Github className="w-4 h-4 mr-2" />
+                        )}
+                        {contact.name === "LinkedIn" && (
+                          <Linkedin className="w-4 h-4 mr-2" />
+                        )}
+                        {contact.name}
+                      </a>
+                    </Button>
+                  ))}
                 </div>
               </div>
             </div>

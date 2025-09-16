@@ -18,26 +18,26 @@ const path = require("path");
  */
 
 const DATA_DIR = path.join(__dirname, "../data");
-const DEV_DATA_PATH = path.join(DATA_DIR, "development/portfolio.json");
-const PROD_DATA_PATH = path.join(DATA_DIR, "production/portfolio.json");
+const PORTFOLIO_DATA_PATH = path.join(DATA_DIR, "portfolio/portfolio.json");
+const PUBLIC_DATA_PATH = path.join(__dirname, "../public/data/portfolio.json");
 
 async function validatePortfolioData() {
   console.log("🔍 Validating portfolio data...");
 
   try {
-    // Validate development data
-    console.log("\n📖 Validating development data...");
-    const devData = await loadAndValidateData(DEV_DATA_PATH);
+    // Validate portfolio data
+    console.log("\n📖 Validating portfolio data...");
+    const portfolioData = await loadAndValidateData(PORTFOLIO_DATA_PATH);
 
-    // Validate production data if it exists
-    if (fs.existsSync(PROD_DATA_PATH)) {
-      console.log("\n📖 Validating production data...");
-      const prodData = await loadAndValidateData(PROD_DATA_PATH);
+    // Validate public data if it exists
+    if (fs.existsSync(PUBLIC_DATA_PATH)) {
+      console.log("\n📖 Validating public data...");
+      const publicData = await loadAndValidateData(PUBLIC_DATA_PATH);
     } else {
-      console.log("⚠️  Production data not found. Run build-data.js first.");
+      console.log("⚠️  Public data not found. Run build-data.js first.");
     }
 
-    console.log("\n✅ All data validation passed!");
+    console.log("\n✅ All portfolio data validation passed!");
   } catch (error) {
     console.error("\n❌ Validation failed:", error.message);
     process.exit(1);
@@ -65,11 +65,14 @@ async function validateDataStructure(data) {
 
   // Check required top-level fields
   const requiredFields = [
-    "metadata",
-    "personal",
+    "profile",
+    "techStacks",
     "projects",
     "experience",
     "skills",
+    "tools",
+    "blogs",
+    "contacts",
   ];
   requiredFields.forEach((field) => {
     if (!data[field]) {
@@ -81,23 +84,29 @@ async function validateDataStructure(data) {
     return { isValid: false, errors };
   }
 
-  // Validate metadata
-  if (!data.metadata.version || !data.metadata.last_updated) {
-    errors.push("Invalid metadata structure");
+  // Validate profile data
+  const profile = data.profile;
+  if (!profile.full_name || !profile.email || !profile.description) {
+    errors.push("Invalid profile data structure");
   }
 
-  // Validate personal data
-  const personal = data.personal;
-  if (!personal.name || !personal.title || !personal.bio) {
-    errors.push("Invalid personal data structure");
+  // Validate tech stacks
+  if (!Array.isArray(data.techStacks)) {
+    errors.push("Tech stacks must be an array");
+  } else {
+    data.techStacks.forEach((tech, index) => {
+      if (!tech.title || !tech.key || !tech.level || !tech.type) {
+        errors.push(`Invalid tech stack at index ${index}`);
+      }
+    });
   }
 
   // Validate projects
-  if (!Array.isArray(data.projects.projects)) {
+  if (!Array.isArray(data.projects)) {
     errors.push("Projects must be an array");
   } else {
-    data.projects.projects.forEach((project, index) => {
-      if (!project.id || !project.title || !project.description) {
+    data.projects.forEach((project, index) => {
+      if (!project.title || !project.description || !project.link) {
         errors.push(`Invalid project at index ${index}`);
       }
     });
@@ -108,21 +117,36 @@ async function validateDataStructure(data) {
     errors.push("Experience must be an array");
   } else {
     data.experience.forEach((exp, index) => {
-      if (!exp.id || !exp.company || !exp.position) {
+      if (!exp.company_name || !exp.role || !exp.start_date) {
         errors.push(`Invalid experience at index ${index}`);
       }
     });
   }
 
   // Validate skills
-  if (!Array.isArray(data.skills.skills)) {
+  if (!Array.isArray(data.skills)) {
     errors.push("Skills must be an array");
   } else {
-    data.skills.skills.forEach((skill, index) => {
-      if (!skill.name || !skill.level || !skill.category) {
+    data.skills.forEach((skill, index) => {
+      if (!skill.title) {
         errors.push(`Invalid skill at index ${index}`);
       }
     });
+  }
+
+  // Validate tools
+  if (!Array.isArray(data.tools)) {
+    errors.push("Tools must be an array");
+  }
+
+  // Validate blogs
+  if (!Array.isArray(data.blogs)) {
+    errors.push("Blogs must be an array");
+  }
+
+  // Validate contacts
+  if (!Array.isArray(data.contacts)) {
+    errors.push("Contacts must be an array");
   }
 
   return { isValid: errors.length === 0, errors };

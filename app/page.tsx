@@ -10,16 +10,16 @@
 "use client";
 
 import { useNavigationMode } from "@/lib/hooks/use-navigation-mode";
-import { usePortfolioData } from "@/lib/hooks/use-portfolio-data";
+import { useEnhancedPortfolioData } from "@/lib/hooks/use-portfolio-data";
 import { PortfolioUI } from "@/components/portfolio-ui";
 import { TerminalSimulator } from "@/components/terminal-simulator";
 import { ModeToggle } from "@/components/mode-toggle";
 
 export default function HomePage() {
   const { mode } = useNavigationMode();
-  const { isLoading } = usePortfolioData();
+  const { loading } = useEnhancedPortfolioData();
 
-  if (isLoading) {
+  if (loading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="animate-pulse text-center">

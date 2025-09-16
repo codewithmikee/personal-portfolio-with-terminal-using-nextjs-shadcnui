@@ -1,13 +1,13 @@
 "use client";
 
 import { Card, CardContent } from "@/components/ui/card";
-import { usePortfolioContext } from "@/lib/hooks/use-portfolio-context";
+import { useEnhancedPortfolioData } from "@/lib/hooks/use-portfolio-data";
 import { MapPin } from "lucide-react";
 
 export function About() {
-  const { data, isLoading } = usePortfolioContext();
+  const { data, loading } = useEnhancedPortfolioData();
 
-  if (isLoading || !data) {
+  if (loading || !data) {
     return (
       <section id="about" className="py-20 bg-muted/30">
         <div className="container mx-auto px-4">
@@ -29,10 +29,21 @@ export function About() {
     );
   }
 
-  const { personal, projects, experience } = data;
+  const { profile, projects, experience } = data;
 
-  const totalProjects = projects.projects.length;
-  const yearsOfExperience = data.personal.stats?.years_experience || 0;
+  const totalProjects = projects.length;
+  const yearsOfExperience =
+    experience.length > 0
+      ? Math.max(
+          ...experience.map((exp) => {
+            const start = new Date(exp.start_date);
+            const end = exp.end_date ? new Date(exp.end_date) : new Date();
+            return Math.floor(
+              (end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24 * 365)
+            );
+          })
+        )
+      : 0;
 
   return (
     <section id="about" className="py-20 bg-muted/30">
@@ -45,12 +56,12 @@ export function About() {
           <div className="grid md:grid-cols-2 gap-8 items-center">
             <div>
               <p className="text-lg text-muted-foreground mb-6 text-pretty">
-                {personal.bio}
+                {profile.description}
               </p>
 
               <div className="flex items-center text-muted-foreground mb-6">
                 <MapPin className="w-4 h-4 mr-2" />
-                {personal.location}
+                {profile.address}
               </div>
 
               <div className="space-y-4">

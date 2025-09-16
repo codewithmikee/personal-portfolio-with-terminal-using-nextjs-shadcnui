@@ -12,9 +12,10 @@
 import type React from "react";
 
 import { useState, useEffect, useRef } from "react";
-import { portfolioData, terminalCommands } from "@/lib/portfolio-data";
+import { terminalCommands } from "@/lib/portfolio-data";
 import { useTerminalCommands } from "@/lib/hooks/use-terminal-commands";
 import { useTerminalNavigation } from "@/lib/hooks/use-terminal-navigation";
+import { useEnhancedPortfolioData } from "@/lib/hooks/use-portfolio-data";
 
 interface TerminalLine {
   type: "input" | "output" | "error" | "success" | "warning";
@@ -30,14 +31,20 @@ export function TerminalSimulator() {
   const inputRef = useRef<HTMLInputElement>(null);
   const terminalRef = useRef<HTMLDivElement>(null);
   const { executeCommand } = useTerminalCommands();
-  const { currentDirectory } = useTerminalNavigation();
+  const { currentPath } = useTerminalNavigation();
+  const { data: portfolioData } = useEnhancedPortfolioData();
+
+  // Construct current directory path
+  const currentDirectory = `/home/portfolio/${currentPath.join("/")}`;
 
   useEffect(() => {
     // Welcome message
     setLines([
       {
         type: "output",
-        content: `Welcome to ${portfolioData.personal.name}'s Portfolio Terminal`,
+        content: `Welcome to ${
+          portfolioData?.profile?.full_name || "Portfolio"
+        } Terminal`,
         timestamp: new Date(),
       },
       {
@@ -92,7 +99,9 @@ export function TerminalSimulator() {
       setLines([
         {
           type: "output",
-          content: `Welcome to ${portfolioData.personal.name}'s Portfolio Terminal`,
+          content: `Welcome to ${
+            portfolioData?.profile?.full_name || "Portfolio"
+          } Terminal`,
           timestamp: new Date(),
         },
         {
@@ -182,7 +191,7 @@ export function TerminalSimulator() {
               <div className="w-3 h-3 bg-green-500 rounded-full"></div>
             </div>
             <div className="text-gray-400 text-sm">
-              portfolio-terminal - {currentDirectory}
+              portfolio-terminal - /home/portfolio/{currentPath.join("/")}
             </div>
             <div className="w-16"></div>
           </div>
@@ -205,7 +214,9 @@ export function TerminalSimulator() {
 
             {/* Input Line */}
             <form onSubmit={handleSubmit} className="flex items-center">
-              <span className="text-green-400 mr-2">{currentDirectory} $</span>
+              <span className="text-green-400 mr-2">
+                /home/portfolio/{currentPath.join("/")} $
+              </span>
               <input
                 ref={inputRef}
                 type="text"
@@ -242,11 +253,11 @@ export function TerminalSimulator() {
               <span className="text-gray-400">- View file contents</span>
             </div>
             {terminalCommands.slice(0, 4).map((cmd) => (
-              <div key={cmd.command} className="flex">
+              <div key={cmd} className="flex">
                 <span className="text-yellow-400 w-24 flex-shrink-0">
-                  {cmd.command}
+                  {cmd}
                 </span>
-                <span className="text-gray-400">- {cmd.description}</span>
+                <span className="text-gray-400">- Available command</span>
               </div>
             ))}
           </div>

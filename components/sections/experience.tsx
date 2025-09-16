@@ -2,12 +2,12 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { usePortfolioContext } from "@/lib/hooks/use-portfolio-context";
+import { useEnhancedPortfolioData } from "@/lib/hooks/use-portfolio-data";
 
 export function Experience() {
-  const { data, isLoading } = usePortfolioContext();
+  const { data, loading } = useEnhancedPortfolioData();
 
-  if (isLoading || !data) {
+  if (loading || !data) {
     return (
       <section id="experience" className="py-20 bg-muted/30">
         <div className="container mx-auto px-4">
@@ -46,7 +46,7 @@ export function Experience() {
 
           <div className="space-y-6">
             {experience.map((exp, index) => (
-              <Card key={exp.id} className="relative">
+              <Card key={index} className="relative">
                 {index < experience.length - 1 && (
                   <div className="absolute left-6 top-16 bottom-0 w-px bg-border hidden md:block" />
                 )}
@@ -54,27 +54,51 @@ export function Experience() {
                 <CardHeader>
                   <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2">
                     <div>
-                      <CardTitle className="text-xl">{exp.position}</CardTitle>
-                      <p className="text-primary font-medium">{exp.company}</p>
+                      <CardTitle className="text-xl">{exp.role}</CardTitle>
+                      <p className="text-primary font-medium">
+                        {exp.company_name}
+                      </p>
                     </div>
                     <Badge variant="outline" className="w-fit">
-                      {exp.timeline?.duration || "Duration not specified"}
+                      {exp.job_type}
                     </Badge>
                   </div>
                 </CardHeader>
 
                 <CardContent>
                   <p className="text-muted-foreground mb-4 text-pretty">
-                    {exp.overview}
+                    {exp.company_description}
                   </p>
 
-                  <div className="flex flex-wrap gap-2">
-                    {exp.technologies_used?.map((tech) => (
-                      <Badge key={tech} variant="secondary" className="text-xs">
-                        {tech}
-                      </Badge>
-                    ))}
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    <Badge variant="secondary" className="text-xs">
+                      {new Date(exp.start_date).toLocaleDateString()} -{" "}
+                      {exp.end_date
+                        ? new Date(exp.end_date).toLocaleDateString()
+                        : "Present"}
+                    </Badge>
                   </div>
+
+                  {exp.contacts.length > 0 && (
+                    <div className="flex flex-wrap gap-2">
+                      {exp.contacts.map((contact, contactIndex) => (
+                        <Badge
+                          key={contactIndex}
+                          variant="outline"
+                          className="text-xs"
+                        >
+                          <a
+                            href={contact.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="hover:underline"
+                          >
+                            {contact.name}
+                          </a>
+                        </Badge>
+                      ))}
+                    </div>
+                  )}
                 </CardContent>
               </Card>
             ))}
