@@ -1,0 +1,233 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// Enums reflecting the TypeScript definitions
+enum ProgrammingRole {
+  FullStack
+  Frontend
+  Backend
+  Mobile
+}
+
+enum ProgrammingLevel {
+  Beginner
+  Intermediate
+  Advanced
+  Expert
+}
+
+enum JobType {
+  Full_Time
+  Part_Time
+  Contract
+  Freelance
+}
+
+enum Priority {
+  main
+  side
+}
+
+enum ProjectType {
+  Frontend
+  Mobile
+  Fullstack
+  Backend
+}
+
+model Portfolio {
+  id          String     @id @default(cuid())
+  externalId  String     @unique
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  // Relations
+  profile     Profile?
+  projects    Project[]
+  experience  Experience[]
+  skills      Skill[]
+  tools       Tool[]
+  blogs       Blog[]
+  contacts    PortfolioContact[]
+}
+
+model Profile {
+  id             String    @id @default(cuid())
+  externalId     String    @unique
+  full_name      String
+  email          String
+  phone_number   String
+  address        String
+  description    String
+  profile_picture String
+
+  // Relations
+  portfolio   Portfolio  @relation(fields: [portfolioId], references: [id])
+  portfolioId String     @unique
+  contacts    ProfileContact[]
+}
+
+// Reusable Contact entries
+model Contact {
+  id        String   @id @default(cuid())
+  externalId String  @unique
+  name      String
+  icon      String
+  link      String
+
+  // Used in multiple places
+  portfolios PortfolioContact[]
+  profiles   ProfileContact[]
+  experiences ExperienceContact[]
+}
+
+// Junction: Portfolio <-> Contact
+model PortfolioContact {
+  id          String    @id @default(cuid())
+  portfolio   Portfolio @relation(fields: [portfolioId], references: [id])
+  portfolioId String
+  contact     Contact   @relation(fields: [contactId], references: [id])
+  contactId   String
+
+  @@unique([portfolioId, contactId])
+}
+
+// Junction: Profile <-> Contact
+model ProfileContact {
+  id        String  @id @default(cuid())
+  profile   Profile @relation(fields: [profileId], references: [id])
+  profileId String
+  contact   Contact @relation(fields: [contactId], references: [id])
+  contactId String
+
+  @@unique([profileId, contactId])
+}
+
+// Reusable TechStack entries
+model TechStack {
+  id        String            @id @default(cuid())
+  externalId String           @unique
+  title     String
+  key       String            @unique
+  icon      String
+  level     ProgrammingLevel
+  priority  Priority
+  type      ProjectType
+
+  featureLinks FeatureTechStack[]
+  blogLinks    BlogTechStack[]
+}
+
+model Project {
+  id          String    @id @default(cuid())
+  externalId  String    @unique
+  title       String
+  description String
+  link        String
+
+  portfolio   Portfolio @relation(fields: [portfolioId], references: [id])
+  portfolioId String
+  features    Feature[]
+}
+
+model Feature {
+  id          String   @id @default(cuid())
+  externalId  String   @unique
+  title       String
+  description String
+
+  project   Project  @relation(fields: [projectId], references: [id])
+  projectId String
+
+  techStacks FeatureTechStack[]
+}
+
+// Junction: Feature <-> TechStack
+model FeatureTechStack {
+  id          String    @id @default(cuid())
+  feature     Feature   @relation(fields: [featureId], references: [id])
+  featureId   String
+  techStack   TechStack @relation(fields: [techStackId], references: [id])
+  techStackId String
+
+  @@unique([featureId, techStackId])
+}
+
+model Experience {
+  id                   String           @id @default(cuid())
+  externalId           String           @unique
+  company_name         String
+  company_description  String
+  start_date           String
+  end_date             String?
+  role                 ProgrammingRole
+  job_type             JobType
+
+  portfolio   Portfolio @relation(fields: [portfolioId], references: [id])
+  portfolioId String
+  contacts    ExperienceContact[]
+}
+
+// Junction: Experience <-> Contact
+model ExperienceContact {
+  id           String     @id @default(cuid())
+  experience   Experience @relation(fields: [experienceId], references: [id])
+  experienceId String
+  contact      Contact    @relation(fields: [contactId], references: [id])
+  contactId    String
+
+  @@unique([experienceId, contactId])
+}
+
+model Skill {
+  id          String   @id @default(cuid())
+  externalId  String   @unique
+  title       String
+
+  portfolio   Portfolio @relation(fields: [portfolioId], references: [id])
+  portfolioId String
+}
+
+model Tool {
+  id          String   @id @default(cuid())
+  externalId  String   @unique
+  title       String
+
+  portfolio   Portfolio @relation(fields: [portfolioId], references: [id])
+  portfolioId String
+}
+
+model Blog {
+  id          String   @id @default(cuid())
+  externalId  String   @unique
+  title       String
+  link        String
+
+  portfolio   Portfolio @relation(fields: [portfolioId], references: [id])
+  portfolioId String
+  techStacks  BlogTechStack[]
+}
+
+// Junction: Blog <-> TechStack
+model BlogTechStack {
+  id          String    @id @default(cuid())
+  blog        Blog      @relation(fields: [blogId], references: [id])
+  blogId      String
+  techStack   TechStack @relation(fields: [techStackId], references: [id])
+  techStackId String
+
+  @@unique([blogId, techStackId])
+}

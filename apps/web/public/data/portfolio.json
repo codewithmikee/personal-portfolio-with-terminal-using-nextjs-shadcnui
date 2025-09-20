@@ -1,0 +1,464 @@
+{
+  "profile": {
+    "full_name": "Mikiyas Birhanu",
+    "email": "your.email@example.com",
+    "phone_number": "",
+    "address": "Your City, Country",
+    "description": "Passionate full-stack developer specializing in Laravel and Next.js. I create scalable web applications with modern technologies and clean, maintainable code.",
+    "profile_picture": "/professional-developer-avatar.png",
+    "contacts": [
+      {
+        "name": "Email",
+        "icon": "/icons/email.svg",
+        "link": "mailto:your.email@example.com"
+      },
+      {
+        "name": "GitHub",
+        "icon": "/icons/github.svg",
+        "link": "https://github.com/yourusername"
+      },
+      {
+        "name": "LinkedIn",
+        "icon": "/icons/linkedin.svg",
+        "link": "https://linkedin.com/in/yourusername"
+      }
+    ]
+  },
+  "techStacks": [
+    {
+      "title": "Laravel",
+      "key": "laravel",
+      "icon": "/icons/laravel.svg",
+      "level": "Expert",
+      "priority": "main",
+      "type": "Backend"
+    },
+    {
+      "title": "Next.js",
+      "key": "next.js",
+      "icon": "/icons/next.js.svg",
+      "level": "Expert",
+      "priority": "main",
+      "type": "Frontend"
+    },
+    {
+      "title": "React",
+      "key": "react",
+      "icon": "/icons/react.svg",
+      "level": "Advanced",
+      "priority": "main",
+      "type": "Frontend"
+    },
+    {
+      "title": "TypeScript",
+      "key": "typescript",
+      "icon": "/icons/typescript.svg",
+      "level": "Advanced",
+      "priority": "main",
+      "type": "Frontend"
+    },
+    {
+      "title": "PHP",
+      "key": "php",
+      "icon": "/icons/php.svg",
+      "level": "Expert",
+      "priority": "main",
+      "type": "Backend"
+    },
+    {
+      "title": "MySQL",
+      "key": "mysql",
+      "icon": "/icons/mysql.svg",
+      "level": "Advanced",
+      "priority": "side",
+      "type": "Fullstack"
+    },
+    {
+      "title": "PostgreSQL",
+      "key": "postgresql",
+      "icon": "/icons/postgresql.svg",
+      "level": "Advanced",
+      "priority": "side",
+      "type": "Fullstack"
+    },
+    {
+      "title": "Tailwind CSS",
+      "key": "tailwindcss",
+      "icon": "/icons/tailwindcss.svg",
+      "level": "Expert",
+      "priority": "main",
+      "type": "Frontend"
+    },
+    {
+      "title": "Docker",
+      "key": "docker",
+      "icon": "/icons/docker.svg",
+      "level": "Intermediate",
+      "priority": "side",
+      "type": "Fullstack"
+    },
+    {
+      "title": "AWS",
+      "key": "aws",
+      "icon": "/icons/aws.svg",
+      "level": "Intermediate",
+      "priority": "side",
+      "type": "Fullstack"
+    }
+  ],
+  "contacts": [
+    {
+      "name": "Email",
+      "icon": "/icons/email.svg",
+      "link": "mailto:your.email@example.com"
+    },
+    {
+      "name": "GitHub",
+      "icon": "/icons/github.svg",
+      "link": "https://github.com/yourusername"
+    },
+    {
+      "name": "LinkedIn",
+      "icon": "/icons/linkedin.svg",
+      "link": "https://linkedin.com/in/yourusername"
+    }
+  ],
+  "projects": [
+    {
+      "title": "E-Commerce Platform",
+      "description": "Full-stack e-commerce solution with Laravel backend and Next.js frontend",
+      "link": "https://your-ecommerce-demo.com",
+      "features": [
+        {
+          "title": "Backend Development",
+          "description": "Built robust backend services using Laravel, PHP, MySQL",
+          "techStacks": [
+            {
+              "title": "Laravel",
+              "key": "laravel",
+              "icon": "/icons/laravel.svg",
+              "level": "Advanced",
+              "priority": "main",
+              "type": "Backend"
+            },
+            {
+              "title": "PHP",
+              "key": "php",
+              "icon": "/icons/php.svg",
+              "level": "Advanced",
+              "priority": "main",
+              "type": "Backend"
+            },
+            {
+              "title": "MySQL",
+              "key": "mysql",
+              "icon": "/icons/mysql.svg",
+              "level": "Advanced",
+              "priority": "main",
+              "type": "Backend"
+            }
+          ]
+        },
+        {
+          "title": "Frontend Development",
+          "description": "Created responsive user interfaces using Next.js, React, TypeScript, Tailwind CSS",
+          "techStacks": [
+            {
+              "title": "Next.js",
+              "key": "next.js",
+              "icon": "/icons/next.js.svg",
+              "level": "Advanced",
+              "priority": "main",
+              "type": "Frontend"
+            },
+            {
+              "title": "React",
+              "key": "react",
+              "icon": "/icons/react.svg",
+              "level": "Advanced",
+              "priority": "main",
+              "type": "Frontend"
+            },
+            {
+              "title": "TypeScript",
+              "key": "typescript",
+              "icon": "/icons/typescript.svg",
+              "level": "Advanced",
+              "priority": "main",
+              "type": "Frontend"
+            },
+            {
+              "title": "Tailwind CSS",
+              "key": "tailwindcss",
+              "icon": "/icons/tailwindcss.svg",
+              "level": "Advanced",
+              "priority": "main",
+              "type": "Frontend"
+            }
+          ]
+        },
+        {
+          "title": "Database Management",
+          "description": "Implemented data persistence using MySQL, Redis",
+          "techStacks": [
+            {
+              "title": "MySQL",
+              "key": "mysql",
+              "icon": "/icons/mysql.svg",
+              "level": "Advanced",
+              "priority": "main",
+              "type": "Backend"
+            },
+            {
+              "title": "Redis",
+              "key": "redis",
+              "icon": "/icons/redis.svg",
+              "level": "Advanced",
+              "priority": "main",
+              "type": "Backend"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Task Management App",
+      "description": "Collaborative task management application with real-time updates",
+      "link": "https://your-task-manager.com",
+      "features": [
+        {
+          "title": "Backend Development",
+          "description": "Built robust backend services using Node.js, Express, Socket.io",
+          "techStacks": [
+            {
+              "title": "Node.js",
+              "key": "node.js",
+              "icon": "/icons/node.js.svg",
+              "level": "Advanced",
+              "priority": "main",
+              "type": "Backend"
+            },
+            {
+              "title": "Express",
+              "key": "express",
+              "icon": "/icons/express.svg",
+              "level": "Advanced",
+              "priority": "main",
+              "type": "Backend"
+            },
+            {
+              "title": "Socket.io",
+              "key": "socket.io",
+              "icon": "/icons/socket.io.svg",
+              "level": "Advanced",
+              "priority": "main",
+              "type": "Backend"
+            }
+          ]
+        },
+        {
+          "title": "Frontend Development",
+          "description": "Created responsive user interfaces using Next.js, React, TypeScript",
+          "techStacks": [
+            {
+              "title": "Next.js",
+              "key": "next.js",
+              "icon": "/icons/next.js.svg",
+              "level": "Advanced",
+              "priority": "main",
+              "type": "Frontend"
+            },
+            {
+              "title": "React",
+              "key": "react",
+              "icon": "/icons/react.svg",
+              "level": "Advanced",
+              "priority": "main",
+              "type": "Frontend"
+            },
+            {
+              "title": "TypeScript",
+              "key": "typescript",
+              "icon": "/icons/typescript.svg",
+              "level": "Advanced",
+              "priority": "main",
+              "type": "Frontend"
+            }
+          ]
+        },
+        {
+          "title": "Database Management",
+          "description": "Implemented data persistence using PostgreSQL, Prisma",
+          "techStacks": [
+            {
+              "title": "PostgreSQL",
+              "key": "postgresql",
+              "icon": "/icons/postgresql.svg",
+              "level": "Advanced",
+              "priority": "main",
+              "type": "Backend"
+            },
+            {
+              "title": "Prisma",
+              "key": "prisma",
+              "icon": "/icons/prisma.svg",
+              "level": "Advanced",
+              "priority": "main",
+              "type": "Backend"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "RESTful API Service",
+      "description": "Scalable API service with comprehensive documentation",
+      "link": "https://github.com/yourusername/api-service",
+      "features": [
+        {
+          "title": "Backend Development",
+          "description": "Built robust backend services using Laravel, PHP, MySQL",
+          "techStacks": [
+            {
+              "title": "Laravel",
+              "key": "laravel",
+              "icon": "/icons/laravel.svg",
+              "level": "Advanced",
+              "priority": "main",
+              "type": "Backend"
+            },
+            {
+              "title": "PHP",
+              "key": "php",
+              "icon": "/icons/php.svg",
+              "level": "Advanced",
+              "priority": "main",
+              "type": "Backend"
+            },
+            {
+              "title": "MySQL",
+              "key": "mysql",
+              "icon": "/icons/mysql.svg",
+              "level": "Advanced",
+              "priority": "main",
+              "type": "Backend"
+            }
+          ]
+        },
+        {
+          "title": "Database Management",
+          "description": "Implemented data persistence using MySQL, Redis",
+          "techStacks": [
+            {
+              "title": "MySQL",
+              "key": "mysql",
+              "icon": "/icons/mysql.svg",
+              "level": "Advanced",
+              "priority": "main",
+              "type": "Backend"
+            },
+            {
+              "title": "Redis",
+              "key": "redis",
+              "icon": "/icons/redis.svg",
+              "level": "Advanced",
+              "priority": "main",
+              "type": "Backend"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "experience": [
+    {
+      "company_name": "Tech Company Inc.",
+      "company_description": "Lead development of web applications using Laravel and Next.js. Mentor junior developers and architect scalable solutions.",
+      "start_date": "2022-01-01",
+      "end_date": null,
+      "role": "FullStack",
+      "job_type": "Full Time",
+      "contacts": [
+        {
+          "name": "Company Website",
+          "icon": "/icons/globe.svg",
+          "link": "https://techcompany.com"
+        }
+      ]
+    },
+    {
+      "company_name": "Digital Agency",
+      "company_description": "Developed and maintained multiple client projects using modern web technologies. Collaborated with design teams to implement pixel-perfect interfaces.",
+      "start_date": "2020-03-01",
+      "end_date": "2021-12-31",
+      "role": "FullStack",
+      "job_type": "Full Time",
+      "contacts": [
+        {
+          "name": "Company Website",
+          "icon": "/icons/globe.svg",
+          "link": "https://digitalagency.com"
+        }
+      ]
+    }
+  ],
+  "skills": [
+    {
+      "title": "Laravel"
+    },
+    {
+      "title": "Next.js"
+    },
+    {
+      "title": "React"
+    },
+    {
+      "title": "TypeScript"
+    },
+    {
+      "title": "PHP"
+    },
+    {
+      "title": "MySQL"
+    },
+    {
+      "title": "PostgreSQL"
+    },
+    {
+      "title": "Tailwind CSS"
+    },
+    {
+      "title": "Docker"
+    },
+    {
+      "title": "AWS"
+    }
+  ],
+  "tools": [
+    {
+      "title": "Cursor"
+    },
+    {
+      "title": "21dev"
+    },
+    {
+      "title": "Docker"
+    },
+    {
+      "title": "Git"
+    },
+    {
+      "title": "Composer"
+    },
+    {
+      "title": "npm"
+    },
+    {
+      "title": "PHPUnit"
+    },
+    {
+      "title": "Postman"
+    }
+  ],
+  "blogs": []
+}
