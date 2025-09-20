@@ -1,3 +1,12 @@
+/**
+ * Portfolio Data Hook
+ * Custom hook for managing portfolio data operations
+ * 
+ * @author Mikiyas Birhanu
+ * @email codewithmikee@gmail.com
+ * @repo https://github.com/codewithmikee/personal-portfolio-with-terminal-using-nextjs-shadcnui.git
+ */
+
 "use client";
 
 import { useState, useEffect, useCallback } from "react";

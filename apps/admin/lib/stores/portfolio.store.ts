@@ -1,4 +1,12 @@
-// lib/stores/portfolio.store.ts
+/**
+ * Portfolio Store
+ * Global state management for portfolio data using Zustand
+ * 
+ * @author Mikiyas Birhanu
+ * @email codewithmikee@gmail.com
+ * @repo https://github.com/codewithmikee/personal-portfolio-with-terminal-using-nextjs-shadcnui.git
+ */
+
 import { create } from "zustand";
 import type { EnhancedPortfolio } from "@/types/portfolio";
 
