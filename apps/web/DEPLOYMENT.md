@@ -31,16 +31,19 @@ The web app displays portfolio data. Ensure your admin app is deployed and acces
 ### Method 1: Vercel CLI
 
 1. **Install Vercel CLI**:
+
    ```bash
    npm i -g vercel
    ```
 
 2. **Login to Vercel**:
+
    ```bash
    vercel login
    ```
 
 3. **Deploy from web directory**:
+
    ```bash
    cd apps/web
    vercel
@@ -104,6 +107,7 @@ Ensure your `package.json` has the correct build scripts:
 The web app fetches portfolio data from the admin app's API:
 
 1. **Set API URL**:
+
    ```env
    NEXT_PUBLIC_API_URL="https://your-admin-app.vercel.app"
    ```
@@ -126,13 +130,13 @@ Update your admin app's API routes to allow requests from the web app:
 // In your API route
 export async function GET() {
   const response = await fetch(url);
-  
+
   return new Response(JSON.stringify(data), {
     headers: {
-      'Content-Type': 'application/json',
-      'Access-Control-Allow-Origin': 'https://your-web-app.vercel.app',
-      'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE',
-      'Access-Control-Allow-Headers': 'Content-Type',
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "https://your-web-app.vercel.app",
+      "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE",
+      "Access-Control-Allow-Headers": "Content-Type",
     },
   });
 }
@@ -154,9 +158,10 @@ export async function GET() {
    - Add tracking code to your app
 
 2. **Custom Analytics**:
+
    ```tsx
-   import { Analytics } from '@vercel/analytics/react'
-   
+   import { Analytics } from "@vercel/analytics/react";
+
    export default function RootLayout({ children }) {
      return (
        <html>
@@ -165,7 +170,7 @@ export async function GET() {
            <Analytics />
          </body>
        </html>
-     )
+     );
    }
    ```
 
@@ -180,6 +185,7 @@ pnpm add @vercel/speed-insights
 ## 🚀 Deployment Steps
 
 1. **Prepare Repository**:
+
    ```bash
    git add .
    git commit -m "feat: prepare web app for deployment"
@@ -250,6 +256,7 @@ curl https://your-admin-app.vercel.app/api/portfolios
 ### Build Optimization
 
 1. **Enable SWC**:
+
    ```json
    {
      "compiler": {
@@ -318,6 +325,7 @@ curl https://your-admin-app.vercel.app/api/portfolios
 ## 👨‍💻 Author
 
 **Mikiyas Birhanu**
+
 - Email: codewithmikee@gmail.com
 - GitHub: [@codewithmikee](https://github.com/codewithmikee)
 - Repository: [personal-portfolio-with-terminal-using-nextjs-shadcnui](https://github.com/codewithmikee/personal-portfolio-with-terminal-using-nextjs-shadcnui.git)

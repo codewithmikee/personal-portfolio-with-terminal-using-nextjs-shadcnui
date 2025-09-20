@@ -140,6 +140,7 @@ The admin app provides RESTful APIs for portfolio management:
 ## 🚀 Deployment
 
 See the deployment guides:
+
 - [Admin App Deployment](./apps/admin/DEPLOYMENT.md)
 - [Web App Deployment](./apps/web/DEPLOYMENT.md)
 
@@ -158,6 +159,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 👨‍💻 Author
 
 **Mikiyas Birhanu**
+
 - Email: codewithmikee@gmail.com
 - GitHub: [@codewithmikee](https://github.com/codewithmikee)
 - Repository: [personal-portfolio-with-terminal-using-nextjs-shadcnui](https://github.com/codewithmikee/personal-portfolio-with-terminal-using-nextjs-shadcnui.git)

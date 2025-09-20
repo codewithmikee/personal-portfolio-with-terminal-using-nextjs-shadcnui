@@ -39,16 +39,19 @@ DATABASE_URL="postgresql://username:password@host:port/database?schema=public"
 ### Method 1: Vercel CLI
 
 1. **Install Vercel CLI**:
+
    ```bash
    npm i -g vercel
    ```
 
 2. **Login to Vercel**:
+
    ```bash
    vercel login
    ```
 
 3. **Deploy from admin directory**:
+
    ```bash
    cd apps/admin
    vercel
@@ -120,6 +123,7 @@ Ensure your `package.json` has the correct build scripts:
    - Add "Postgres" database
 
 2. **Update Environment Variables**:
+
    ```env
    DATABASE_URL="postgresql://username:password@host:port/database?schema=public"
    ```
@@ -178,9 +182,10 @@ Ensure your `package.json` has the correct build scripts:
    - Add tracking code to your app
 
 2. **Custom Analytics**:
+
    ```tsx
-   import { Analytics } from '@vercel/analytics/react'
-   
+   import { Analytics } from "@vercel/analytics/react";
+
    export default function RootLayout({ children }) {
      return (
        <html>
@@ -189,7 +194,7 @@ Ensure your `package.json` has the correct build scripts:
            <Analytics />
          </body>
        </html>
-     )
+     );
    }
    ```
 
@@ -204,6 +209,7 @@ pnpm add @sentry/nextjs
 ## 🚀 Deployment Steps
 
 1. **Prepare Repository**:
+
    ```bash
    git add .
    git commit -m "feat: prepare for deployment"
@@ -274,6 +280,7 @@ pnpm db:generate
 ### Build Optimization
 
 1. **Enable SWC**:
+
    ```json
    {
      "compiler": {
@@ -302,6 +309,7 @@ pnpm db:generate
 ## 👨‍💻 Author
 
 **Mikiyas Birhanu**
+
 - Email: codewithmikee@gmail.com
 - GitHub: [@codewithmikee](https://github.com/codewithmikee)
 - Repository: [personal-portfolio-with-terminal-using-nextjs-shadcnui](https://github.com/codewithmikee/personal-portfolio-with-terminal-using-nextjs-shadcnui.git)

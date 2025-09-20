@@ -1,5 +1,10 @@
 /**
  * Enhanced Portfolio Data Structure: TypeScript Definitions
+ * 
+ * @author Mikiyas Birhanu
+ * @email codewithmikee@gmail.com
+ * @repo https://github.com/codewithmikee/personal-portfolio-with-terminal-using-nextjs-shadcnui.git
+ */
  *
  * This file contains the new enhanced data structure for the portfolio website.
  * It provides better organization, more detailed information, and improved type safety.

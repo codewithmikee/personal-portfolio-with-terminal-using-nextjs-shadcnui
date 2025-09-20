@@ -1,4 +1,13 @@
 // app/page.tsx - Admin Portfolio Management Dashboard
+/**
+ * Admin Dashboard
+ * Main portfolio management dashboard with CRUD operations
+ * 
+ * @author Mikiyas Birhanu
+ * @email codewithmikee@gmail.com
+ * @repo https://github.com/codewithmikee/personal-portfolio-with-terminal-using-nextjs-shadcnui.git
+ */
+
 "use client";
 
 import { useState, useEffect } from "react";
