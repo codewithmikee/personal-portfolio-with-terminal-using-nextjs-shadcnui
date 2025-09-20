@@ -3,7 +3,12 @@
 import { usePortfolioContext } from "@/providers/portfolio-provider";
 import { usePortfolioConverter } from "@/hooks/use-portfolio-converter";
 import { Button } from "@workspace/ui/components/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@workspace/ui/components/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@workspace/ui/components/card";
 import { Badge } from "@workspace/ui/components/badge";
 import {
   Download,
@@ -27,7 +32,7 @@ export function PortfolioExportDemo() {
     downloadAsCSV,
     downloadAsSummary,
     isAvailable,
-  } = usePortfolioConverter(portfolio);
+  } = usePortfolioConverter();
 
   const [copiedFormat, setCopiedFormat] = useState<string | null>(null);
 
@@ -106,7 +111,7 @@ export function PortfolioExportDemo() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {exportOptions.map((option) => {
               const Icon = option.icon;
-              const content = option.getContent();
+              const content = option.getContent() || "";
               const isCopied = copiedFormat === option.name;
 
               return (
@@ -138,7 +143,7 @@ export function PortfolioExportDemo() {
                       </Button>
 
                       <Button
-                        onClick={() => handleCopy(content, option.name)}
+                        onClick={() => handleCopy(content || "", option.name)}
                         size="sm"
                         variant="outline"
                         className="w-full"
@@ -181,11 +186,10 @@ export function PortfolioExportDemo() {
                   variant="outline"
                   className="cursor-pointer hover:bg-muted"
                   onClick={() => {
-                    const content = option.getContent();
+                    const content = option.getContent() || "";
                     const preview =
                       content.substring(0, 500) +
                       (content.length > 500 ? "..." : "");
-                    console.log(`${option.name} Preview:`, preview);
                   }}
                 >
                   {option.name}

@@ -12,13 +12,14 @@ function PortfolioWrapper() {
   const [error, setError] = useState<string | null>(null);
   const [portfolio, setPortfolio] = useState<EnhancedPortfolio | null>(null);
 
-  const isPublic =
-    useEnvValues({
-      variableName: "IS_PUBLIC",
-      defaultValue: "false",
-    }) === "true";
+  const isPublicValue = useEnvValues({
+    variableName: "IS_PUBLIC",
+    defaultValue: "false",
+  });
+  const isPublic = isPublicValue === "true";
 
-  const sourcePath = useEnvValues({ variableName: "SOURCE_PATH" }) || "";
+  const sourcePathValue = useEnvValues({ variableName: "SOURCE_PATH" });
+  const sourcePath = typeof sourcePathValue === "string" ? sourcePathValue : "";
 
   const loadPortfolio = useCallback(async () => {
     setIsLoading(true);

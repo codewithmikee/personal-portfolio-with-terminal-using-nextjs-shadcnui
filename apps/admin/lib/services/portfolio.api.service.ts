@@ -252,74 +252,169 @@ export async function updatePortfolio(
   id: string,
   data: Prisma.PortfolioUpdateInput
 ) {
+  // Remove any id fields that might accidentally be included
+  const { id: _, ...cleanData } = data as any;
+
   // Handle profile updates separately since it's a one-to-one relationship
-  if (
-    data.profile &&
-    typeof data.profile === "object" &&
-    "update" in data.profile
-  ) {
-    const profileData = data.profile.update as any;
+  if (cleanData.profile && typeof cleanData.profile === "object") {
+    // Check if it's already in Prisma format (has 'update' key)
+    if ("update" in cleanData.profile) {
+      const profileData = cleanData.profile.update as any;
 
-    // Extract contacts if present and handle them separately
-    const { contacts, ...profileFields } = profileData;
+      // Extract contacts if present and handle them separately
+      const { contacts, ...profileFields } = profileData;
 
-    // Update the profile without contacts first
-    await prisma.profile.update({
-      where: { portfolioId: id },
-      data: profileFields,
-    });
-
-    // Handle contacts if they exist
-    if (contacts && Array.isArray(contacts)) {
-      // Get the profile ID first
-      const profile = await prisma.profile.findUnique({
+      // Update the profile without contacts first
+      await prisma.profile.update({
         where: { portfolioId: id },
-        select: { id: true },
+        data: profileFields,
       });
 
-      if (profile) {
-        // Delete existing contacts
-        await prisma.profileContact.deleteMany({
-          where: { profileId: profile.id },
+      // Handle contacts if they exist
+      if (contacts && Array.isArray(contacts)) {
+        // Get the profile ID first
+        const profile = await prisma.profile.findUnique({
+          where: { portfolioId: id },
+          select: { id: true },
         });
 
-        // Create new contacts
-        for (const contact of contacts) {
-          // First, find or create the contact
-          let contactRecord = await prisma.contact.findFirst({
-            where: {
-              OR: [{ externalId: contact.externalId }, { link: contact.link }],
-            },
+        if (profile) {
+          // Delete existing contacts
+          await prisma.profileContact.deleteMany({
+            where: { profileId: profile.id },
           });
 
-          if (!contactRecord) {
-            contactRecord = await prisma.contact.create({
-              data: {
+          // Create new contacts
+          for (const contact of contacts) {
+            // Validate contact data
+            if (
+              !contact.name ||
+              typeof contact.name !== "string" ||
+              contact.name === "String"
+            ) {
+              console.warn("Skipping contact without valid name:", contact);
+              continue;
+            }
+
+            // First, find or create the contact
+            let contactRecord = await prisma.contact.findFirst({
+              where: {
+                OR: [
+                  { externalId: contact.externalId },
+                  { link: contact.link },
+                ],
+              },
+            });
+
+            if (!contactRecord) {
+              // Ensure required fields have valid values
+              const contactData = {
                 externalId: contact.externalId || `contact-${Date.now()}`,
-                name: contact.name,
-                icon: contact.icon,
-                link: contact.link,
+                name: String(contact.name).trim() || "Unknown Contact",
+                icon: String(contact.icon || "/icons/default.svg"),
+                link: String(contact.link || "#"),
+              };
+
+              contactRecord = await prisma.contact.create({
+                data: contactData,
+              });
+            }
+
+            // Create the profile-contact relationship
+            await prisma.profileContact.create({
+              data: {
+                profileId: profile.id,
+                contactId: contactRecord.id,
               },
             });
           }
-
-          // Create the profile-contact relationship
-          await prisma.profileContact.create({
-            data: {
-              profileId: profile.id,
-              contactId: contactRecord.id,
-            },
-          });
         }
       }
-    }
 
-    // Remove profile from the main update
-    const { profile, ...restData } = data;
-    return prisma.portfolio.update({ where: { id }, data: restData });
+      // Remove profile from the main update
+      const { profile, ...restData } = cleanData;
+      return prisma.portfolio.update({ where: { id }, data: restData });
+    } else {
+      // Handle direct profile data (not in Prisma format)
+      const profileData = cleanData.profile as any;
+
+      // Extract contacts if present and handle them separately
+      const { contacts, ...profileFields } = profileData;
+
+      // Update the profile without contacts first
+      await prisma.profile.update({
+        where: { portfolioId: id },
+        data: profileFields,
+      });
+
+      // Handle contacts if they exist
+      if (contacts && Array.isArray(contacts)) {
+        // Get the profile ID first
+        const profile = await prisma.profile.findUnique({
+          where: { portfolioId: id },
+          select: { id: true },
+        });
+
+        if (profile) {
+          // Delete existing contacts
+          await prisma.profileContact.deleteMany({
+            where: { profileId: profile.id },
+          });
+
+          // Create new contacts
+          for (const contact of contacts) {
+            // Validate contact data
+            if (
+              !contact.name ||
+              typeof contact.name !== "string" ||
+              contact.name === "String"
+            ) {
+              console.warn("Skipping contact without valid name:", contact);
+              continue;
+            }
+
+            // First, find or create the contact
+            let contactRecord = await prisma.contact.findFirst({
+              where: {
+                OR: [
+                  { externalId: contact.externalId },
+                  { link: contact.link },
+                ],
+              },
+            });
+
+            if (!contactRecord) {
+              // Ensure required fields have valid values
+              const contactData = {
+                externalId: contact.externalId || `contact-${Date.now()}`,
+                name: String(contact.name).trim() || "Unknown Contact",
+                icon: String(contact.icon || "/icons/default.svg"),
+                link: String(contact.link || "#"),
+              };
+
+              contactRecord = await prisma.contact.create({
+                data: contactData,
+              });
+            }
+
+            // Create the profile-contact relationship
+            await prisma.profileContact.create({
+              data: {
+                profileId: profile.id,
+                contactId: contactRecord.id,
+              },
+            });
+          }
+        }
+      }
+
+      // Remove profile from the main update
+      const { profile: _, ...restData } = cleanData;
+      return prisma.portfolio.update({ where: { id }, data: restData });
+    }
   }
 
-  return prisma.portfolio.update({ where: { id }, data });
+  return prisma.portfolio.update({ where: { id }, data: cleanData });
 }
 
 export async function deletePortfolio(id: string) {

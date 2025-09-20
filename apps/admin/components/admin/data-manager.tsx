@@ -11,7 +11,12 @@
 
 import { useState } from "react";
 import { Button } from "@workspace/ui/components/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@workspace/ui/components/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@workspace/ui/components/card";
 import { Alert, AlertDescription } from "@workspace/ui/components/alert";
 import { usePortfolioStore } from "@/lib/stores/portfolio.store";
 import {
@@ -51,7 +56,7 @@ export function DataManager() {
         throw new Error("No data available to export");
       }
 
-      const jsonData = exportJSON();
+      const jsonData = JSON.stringify(data, null, 2);
       const blob = new Blob([jsonData], { type: "application/json" });
       const url = URL.createObjectURL(blob);
 

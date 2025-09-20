@@ -4,8 +4,18 @@
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { Button } from "@workspace/ui/components/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@workspace/ui/components/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@workspace/ui/components/tabs";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@workspace/ui/components/card";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@workspace/ui/components/tabs";
 import {
   ArrowLeft,
   Save,
@@ -77,12 +87,40 @@ export default function PortfolioEditPage() {
     try {
       setIsSaving(true);
 
+      // Clean the portfolio data by removing all id fields and timestamps
+      const cleanPortfolioData = (data: any): any => {
+        if (Array.isArray(data)) {
+          return data.map(cleanPortfolioData);
+        }
+        if (data && typeof data === "object") {
+          const cleaned: any = {};
+          for (const [key, value] of Object.entries(data)) {
+            // Skip id fields and timestamps
+            if (
+              key === "id" ||
+              key === "createdAt" ||
+              key === "updatedAt" ||
+              key === "portfolioId" ||
+              key === "profileId" ||
+              key === "contactId"
+            ) {
+              continue;
+            }
+            cleaned[key] = cleanPortfolioData(value);
+          }
+          return cleaned;
+        }
+        return data;
+      };
+
+      const portfolioData = cleanPortfolioData(portfolio);
+
       const response = await fetch(`/api/portfolios/${portfolio.id}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(portfolio),
+        body: JSON.stringify(portfolioData),
       });
 
       if (!response.ok) {

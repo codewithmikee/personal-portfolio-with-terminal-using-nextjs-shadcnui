@@ -112,6 +112,21 @@ export class PortfolioService {
   }
 
   // CRUD Operations
+  async getPortfolio(): Promise<EnhancedPortfolio> {
+    return this.loadPortfolio();
+  }
+
+  async updatePortfolio(portfolio: EnhancedPortfolio): Promise<void> {
+    const id = await this.getPortfolioId();
+    const response = await fetch(`${this.API_BASE}/${id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(portfolio),
+    });
+    if (!response.ok) throw new Error("Failed to update portfolio");
+    this.clearCache();
+  }
+
   async updateProfile(updates: Partial<Profile>): Promise<void> {
     const id = await this.getPortfolioId();
     const response = await fetch(`${this.API_BASE}/${id}`, {

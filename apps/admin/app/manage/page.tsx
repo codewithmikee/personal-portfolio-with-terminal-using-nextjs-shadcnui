@@ -66,12 +66,10 @@ export default function CVBuilder() {
 
   const handleSave = () => {
     setHasUnsavedChanges(false);
-    console.log("Resume saved!");
   };
 
   const handleDiscard = () => {
     setHasUnsavedChanges(false);
-    console.log("Changes discarded!");
   };
 
   const handleBackToHome = () => {
