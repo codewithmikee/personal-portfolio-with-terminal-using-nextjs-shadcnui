@@ -169,7 +169,7 @@ export default function AdminDashboard() {
                 Refresh
               </Button>
               <Button asChild>
-                <Link href="/admin/portfolios/new">
+                <Link href="/portfolios/new">
                   <Plus className="w-4 h-4 mr-2" />
                   Create New Portfolio
                 </Link>
@@ -269,7 +269,7 @@ export default function AdminDashboard() {
                 </p>
                 {!searchTerm && (
                   <Button asChild>
-                    <Link href="/admin/portfolios/new">
+                    <Link href="/portfolios/new">
                       <Plus className="w-4 h-4 mr-2" />
                       Create Portfolio
                     </Link>

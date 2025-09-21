@@ -4,7 +4,12 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@workspace/ui/components/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@workspace/ui/components/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@workspace/ui/components/card";
 import { Input } from "@workspace/ui/components/input";
 import { Label } from "@workspace/ui/components/label";
 import { Textarea } from "@workspace/ui/components/textarea";
@@ -108,7 +113,7 @@ export default function CreatePortfolioPage() {
       toast.success("Portfolio created successfully");
 
       // Redirect to edit page
-      router.push(`/admin/portfolios/${externalId}/edit`);
+      router.push(`/portfolios/${externalId}/edit`);
     } catch (error) {
       console.error("Error creating portfolio:", error);
       toast.error("Failed to create portfolio");
