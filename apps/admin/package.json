@@ -18,11 +18,31 @@
     "export:static": "pnpm build && next export",
     "db:seed": "tsx prisma/seed.ts",
     "db:generate": "prisma generate",
-    "db:migrate": "prisma migrate dev"
+    "db:migrate": "prisma migrate dev",
+    "db:migrate:reset": "prisma migrate reset --force",
+    "db:deploy": "prisma migrate deploy",
+    "db:reset": "prisma db push --force-reset",
+    "db:studio": "prisma studio",
+    "postbuild": "pnpm db:generate",
+    "postinstall": "pnpm db:generate",
+    "deploy:setup": "pnpm db:deploy && pnpm db:seed",
+    "deploy:verify": "node scripts/health-check.js",
+    "deploy:complete": "pnpm deploy:setup && pnpm deploy:verify",
+    "cache:clear": "rm -rf .next/cache",
+    "cache:warm": "node scripts/cache-warm.js",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "docker:logs": "docker-compose logs -f postgres",
+    "docker:reset": "docker-compose down -v && docker-compose up -d",
+    "setup:postgres": "node scripts/setup-postgres.js"
+  },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
     "@prisma/client": "^6.16.2",
+    "@prisma/extension-accelerate": "^2.0.2",
     "@radix-ui/react-alert-dialog": "1.1.4",
     "@radix-ui/react-checkbox": "latest",
     "@radix-ui/react-dialog": "1.1.4",
@@ -58,8 +78,10 @@
   "devDependencies": {
     "@tailwindcss/postcss": "^4.1.9",
     "@types/node": "^22",
+    "@types/pg": "^8.11.10",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "pg": "^8.12.0",
     "postcss": "^8.5",
     "prisma": "^6.16.2",
     "tailwindcss": "^4.1.9",

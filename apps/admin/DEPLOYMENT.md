@@ -15,8 +15,8 @@ This guide covers deploying the Portfolio Management Admin App to Vercel.
 Create a `.env.local` file in the `apps/admin` directory with the following variables:
 
 ```env
-# Database
-DATABASE_URL="file:./dev.db"
+# Database (PostgreSQL)
+DATABASE_URL="postgresql://username:password@host:port/database?schema=public"
 
 # API Configuration
 NEXT_PUBLIC_API_URL="https://your-admin-app.vercel.app"
@@ -27,11 +27,35 @@ NEXT_PUBLIC_VERCEL_ANALYTICS_ID="your-analytics-id"
 
 ### 2. Database Setup
 
-The admin app uses Prisma with SQLite. For production, consider using a PostgreSQL database:
+The admin app uses Prisma with PostgreSQL. You can set up PostgreSQL locally using Docker or use a cloud provider:
+
+#### Local Development with Docker
+
+```bash
+# Start PostgreSQL with Docker Compose
+pnpm docker:up
+
+# Check logs
+pnpm docker:logs
+
+# Stop database
+pnpm docker:down
+```
+
+#### Production Database Options
 
 ```env
-# For PostgreSQL (recommended for production)
+# Vercel Postgres
 DATABASE_URL="postgresql://username:password@host:port/database?schema=public"
+
+# Supabase
+DATABASE_URL="postgresql://postgres:[YOUR-PASSWORD]@db.[YOUR-PROJECT-REF].supabase.co:5432/postgres"
+
+# Railway
+DATABASE_URL="postgresql://postgres:password@containers-us-west-1.railway.app:5432/railway"
+
+# Neon
+DATABASE_URL="postgresql://username:password@ep-example.us-east-2.aws.neon.tech/neondb"
 ```
 
 ## 🚀 Vercel Deployment
@@ -101,17 +125,44 @@ Create a `vercel.json` file in the `apps/admin` directory:
 
 ### Package.json Scripts
 
-Ensure your `package.json` has the correct build scripts:
+Ensure your `package.json` has the correct build and deployment scripts:
 
 ```json
 {
   "scripts": {
-    "build": "next build",
+    "build": "pnpm build:data && next build",
+    "build:data": "node scripts/build-data.js",
     "start": "next start",
-    "dev": "next dev"
+    "dev": "next dev",
+    "postbuild": "pnpm db:generate",
+    "postinstall": "pnpm db:generate",
+    "deploy:setup": "pnpm db:deploy && pnpm db:seed",
+    "deploy:verify": "node scripts/health-check.js",
+    "deploy:complete": "pnpm deploy:setup && pnpm deploy:verify",
+    "cache:warm": "node scripts/cache-warm.js",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "docker:logs": "docker-compose logs -f postgres",
+    "docker:reset": "docker-compose down -v && docker-compose up -d"
   }
 }
 ```
+
+#### Post-Deployment Scripts
+
+- **`deploy:setup`**: Runs database migrations and seeds the database
+- **`deploy:verify`**: Performs health checks to ensure deployment is successful
+- **`deploy:complete`**: Complete deployment workflow (setup + verification)
+- **`cache:warm`**: Warms up caches for optimal performance
+- **`postbuild`**: Automatically generates Prisma client after build
+- **`postinstall`**: Ensures Prisma client is generated after dependency installation
+
+#### Docker Scripts (Local Development)
+
+- **`docker:up`**: Start PostgreSQL database with Docker Compose
+- **`docker:down`**: Stop PostgreSQL database
+- **`docker:logs`**: View PostgreSQL logs
+- **`docker:reset`**: Reset database (removes all data and restarts)
 
 ## 🗄️ Database Setup
 
@@ -132,6 +183,34 @@ Ensure your `package.json` has the correct build scripts:
    ```bash
    pnpm db:migrate
    pnpm db:seed
+   ```
+
+#### Local Development Setup
+
+1. **Start PostgreSQL**:
+
+   ```bash
+   pnpm docker:up
+   ```
+
+2. **Set up environment**:
+
+   ```bash
+   cp env.example .env.local
+   # Edit .env.local with your database URL
+   ```
+
+3. **Generate Prisma client and run migrations**:
+
+   ```bash
+   pnpm db:generate
+   pnpm db:migrate
+   pnpm db:seed
+   ```
+
+4. **Start development server**:
+   ```bash
+   pnpm dev
    ```
 
 ### Option 2: External Database

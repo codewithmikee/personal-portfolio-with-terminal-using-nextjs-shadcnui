@@ -1,7 +1,7 @@
 /**
  * Portfolio API Service
  * Handles all database operations for portfolio management
- * 
+ *
  * @author Mikiyas Birhanu
  * @email codewithmikee@gmail.com
  * @repo https://github.com/codewithmikee/personal-portfolio-with-terminal-using-nextjs-shadcnui.git
@@ -270,31 +270,31 @@ export async function updatePortfolio(
     if ("update" in cleanData.profile) {
       const profileData = cleanData.profile.update as any;
 
-    // Extract contacts if present and handle them separately
-    const { contacts, ...profileFields } = profileData;
+      // Extract contacts if present and handle them separately
+      const { contacts, ...profileFields } = profileData;
 
-    // Update the profile without contacts first
-    await prisma.profile.update({
-      where: { portfolioId: id },
-      data: profileFields,
-    });
-
-    // Handle contacts if they exist
-    if (contacts && Array.isArray(contacts)) {
-      // Get the profile ID first
-      const profile = await prisma.profile.findUnique({
+      // Update the profile without contacts first
+      await prisma.profile.update({
         where: { portfolioId: id },
-        select: { id: true },
+        data: profileFields,
       });
 
-      if (profile) {
-        // Delete existing contacts
-        await prisma.profileContact.deleteMany({
-          where: { profileId: profile.id },
+      // Handle contacts if they exist
+      if (contacts && Array.isArray(contacts)) {
+        // Get the profile ID first
+        const profile = await prisma.profile.findUnique({
+          where: { portfolioId: id },
+          select: { id: true },
         });
 
-        // Create new contacts
-        for (const contact of contacts) {
+        if (profile) {
+          // Delete existing contacts
+          await prisma.profileContact.deleteMany({
+            where: { profileId: profile.id },
+          });
+
+          // Create new contacts
+          for (const contact of contacts) {
             // Validate contact data
             if (
               !contact.name ||
@@ -305,17 +305,17 @@ export async function updatePortfolio(
               continue;
             }
 
-          // First, find or create the contact
-          let contactRecord = await prisma.contact.findFirst({
-            where: {
+            // First, find or create the contact
+            let contactRecord = await prisma.contact.findFirst({
+              where: {
                 OR: [
                   { externalId: contact.externalId },
                   { link: contact.link },
                 ],
-            },
-          });
+              },
+            });
 
-          if (!contactRecord) {
+            if (!contactRecord) {
               // Ensure required fields have valid values
               const contactData = {
                 externalId: contact.externalId || `contact-${Date.now()}`,
@@ -326,21 +326,21 @@ export async function updatePortfolio(
 
               contactRecord = await prisma.contact.create({
                 data: contactData,
+              });
+            }
+
+            // Create the profile-contact relationship
+            await prisma.profileContact.create({
+              data: {
+                profileId: profile.id,
+                contactId: contactRecord.id,
+              },
             });
           }
-
-          // Create the profile-contact relationship
-          await prisma.profileContact.create({
-            data: {
-              profileId: profile.id,
-              contactId: contactRecord.id,
-            },
-          });
         }
       }
-    }
 
-    // Remove profile from the main update
+      // Remove profile from the main update
       const { profile, ...restData } = cleanData;
       return prisma.portfolio.update({ where: { id }, data: restData });
     } else {
@@ -419,7 +419,7 @@ export async function updatePortfolio(
 
       // Remove profile from the main update
       const { profile: _, ...restData } = cleanData;
-    return prisma.portfolio.update({ where: { id }, data: restData });
+      return prisma.portfolio.update({ where: { id }, data: restData });
     }
   }
 
